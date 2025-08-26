@@ -26,9 +26,9 @@ app.use(logger); // Request logging
 // Import API routes
 const itemsRoute = require('./api/items');
 const healthRoute = require('./api/health');
-const authRoute = require('./src/routes/auth.routes');
 const usersRoute = require('./routes/users');
-const profileRoute = require('./routes/profile');
+const authRoute = require('./routes/auth');
+const familiesRoute = require('./routes/families');
 
 // API Documentation - Swagger UI
 if (process.env.NODE_ENV !== 'production') {
@@ -40,7 +40,7 @@ app.use('/api/items', itemsRoute);
 app.use('/api/health', healthRoute);
 app.use('/api/auth', authRoute);
 app.use('/api/users', usersRoute);
-app.use('/api/profile', profileRoute);
+app.use('/api/families', familiesRoute);
 
 // Serve static files from the 'public' directory
 app.use(express.static(path.join(__dirname, 'public')));
@@ -133,8 +133,6 @@ const server = app.listen(PORT, () => {
   console.log(`- POST   http://localhost:${PORT}/api/items`);
   console.log(`- GET    http://localhost:${PORT}/api/users`);
   console.log(`- POST   http://localhost:${PORT}/api/users`);
-  console.log(`- GET    http://localhost:${PORT}/api/profile`);
-  console.log(`- PATCH  http://localhost:${PORT}/api/profile`);
   console.log(`- GET    http://localhost:${PORT}/api/health\n`);
   console.log('Authentication:');
   console.log(`- POST   http://localhost:${PORT}/api/auth/signup`);
