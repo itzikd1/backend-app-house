@@ -24,6 +24,7 @@ app.use(logger); // Request logging
 // Import API routes
 const itemsRoute = require('./api/items');
 const healthRoute = require('./api/health');
+const authRoute = require('./src/routes/auth.routes');
 
 // API Documentation - Swagger UI
 if (process.env.NODE_ENV !== 'production') {
@@ -33,6 +34,7 @@ if (process.env.NODE_ENV !== 'production') {
 // API routes
 app.use('/api/items', itemsRoute);
 app.use('/api/health', healthRoute);
+app.use('/api/auth', authRoute);
 
 // Serve static files from the 'public' directory
 app.use(express.static(path.join(__dirname, 'public')));
