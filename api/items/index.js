@@ -1,14 +1,13 @@
-// In-memory storage for demo purposes
-// In a real app, this would be a database
-let items = ["Item 1", "Item 2", "Item 3"];
+// Import Prisma client
+const prisma = require('../../lib/prisma');
 
 // Vercel Serverless Function for items API
-// @route   GET/PUT/DELETE /api/items
+// @route   GET/POST/PUT/DELETE /api/items
 // @access  Public
-module.exports = (req, res) => {
+module.exports = async (req, res) => {
   // Set CORS headers
   res.setHeader('Access-Control-Allow-Origin', '*');
-  res.setHeader('Access-Control-Allow-Methods', 'GET, PUT, DELETE, OPTIONS');
+  res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
   res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
 
   // Handle OPTIONS method for CORS preflight
@@ -16,12 +15,17 @@ module.exports = (req, res) => {
     return res.status(200).end();
   }
 
-  // Handle GET request
+  // Handle GET request - Get all items
   if (req.method === 'GET') {
     try {
+      const items = await prisma.item.findMany({
+        orderBy: {
+          createdAt: 'desc',
+        },
+      });
       return res.status(200).json(items);
     } catch (err) {
-      console.error('Error:', err);
+      console.error('Error fetching items:', err);
       return res.status(500).json({ 
         error: 'Internal Server Error',
         message: process.env.NODE_ENV === 'development' ? err.message : undefined
@@ -29,30 +33,69 @@ module.exports = (req, res) => {
     }
   }
 
-  // Handle PUT request
+  // Handle POST request - Create new item
+  if (req.method === 'POST') {
+    try {
+      const { name } = req.body;
+      
+      if (!name) {
+        return res.status(400).json({ 
+          error: 'Item name is required' 
+        });
+      }
+      
+      const newItem = await prisma.item.create({
+        data: {
+          name: name
+        },
+      });
+      
+      return res.status(201).json({
+        message: 'Item created successfully',
+        item: newItem
+      });
+    } catch (err) {
+      console.error('Error creating item:', err);
+      return res.status(500).json({ 
+        error: 'Internal Server Error',
+        message: process.env.NODE_ENV === 'development' ? err.message : undefined
+      });
+    }
+  }
+
+  // Handle PUT request - Update existing item
   if (req.method === 'PUT') {
     try {
-      const { index, value } = req.body;
+      const { id, name } = req.body;
       
-      if (index === undefined || value === undefined) {
+      if (!id || !name) {
         return res.status(400).json({ 
-          error: 'Index and value are required' 
+          error: 'Item ID and name are required' 
         });
       }
       
-      if (index < 0 || index >= items.length) {
+      // Check if item exists
+      const existingItem = await prisma.item.findUnique({
+        where: { id: id },
+      });
+      
+      if (!existingItem) {
         return res.status(404).json({ 
           error: 'Item not found' 
         });
       }
       
-      items[index] = value;
+      const updatedItem = await prisma.item.update({
+        where: { id: id },
+        data: { name: name },
+      });
+      
       return res.status(200).json({ 
         message: 'Item updated successfully',
-        items 
+        item: updatedItem 
       });
     } catch (err) {
-      console.error('Error:', err);
+      console.error('Error updating item:', err);
       return res.status(500).json({ 
         error: 'Internal Server Error',
         message: process.env.NODE_ENV === 'development' ? err.message : undefined
@@ -60,31 +103,38 @@ module.exports = (req, res) => {
     }
   }
 
-  // Handle DELETE request
+  // Handle DELETE request - Delete item
   if (req.method === 'DELETE') {
     try {
-      const { index } = req.body;
+      const { id } = req.body;
       
-      if (index === undefined) {
+      if (!id) {
         return res.status(400).json({ 
-          error: 'Index is required' 
+          error: 'Item ID is required' 
         });
       }
       
-      if (index < 0 || index >= items.length) {
+      // Check if item exists
+      const existingItem = await prisma.item.findUnique({
+        where: { id: id },
+      });
+      
+      if (!existingItem) {
         return res.status(404).json({ 
           error: 'Item not found' 
         });
       }
       
-      const deletedItem = items.splice(index, 1);
+      const deletedItem = await prisma.item.delete({
+        where: { id: id },
+      });
+      
       return res.status(200).json({ 
         message: 'Item deleted successfully',
-        deletedItem,
-        items
+        item: deletedItem
       });
     } catch (err) {
-      console.error('Error:', err);
+      console.error('Error deleting item:', err);
       return res.status(500).json({ 
         error: 'Internal Server Error',
         message: process.env.NODE_ENV === 'development' ? err.message : undefined
@@ -93,7 +143,7 @@ module.exports = (req, res) => {
   }
 
   // Handle unsupported methods
-  res.setHeader('Allow', ['GET', 'PUT', 'DELETE', 'OPTIONS']);
+  res.setHeader('Allow', ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS']);
   return res.status(405).json({ 
     error: `Method ${req.method} Not Allowed` 
   });

@@ -1,10 +1,15 @@
 {
   "name": "express-vercel-deployment",
   "version": "1.0.0",
-  "description": "",
+  "description": "Express API with Prisma and PostgreSQL on Vercel",
   "main": "server.js",
   "scripts": {
-    "start": "node server"
+    "dev": "node server",
+    "start": "node server",
+    "build": "prisma generate && prisma migrate deploy",
+    "prisma:generate": "prisma generate",
+    "prisma:migrate": "prisma migrate deploy",
+    "prisma:studio": "prisma studio"
   },
   "author": "Itzik",
   "license": "ISC",
@@ -12,5 +17,15 @@
     "@prisma/client": "^6.14.0",
     "cors": "^2.8.5",
     "express": "^4.21.2"
+  },
+  "devDependencies": {
+    "@prisma/internals": "^6.14.0",
+    "prisma": "^6.14.0"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "prisma": {
+    "schema": "./prisma/schema.prisma"
   }
 }
