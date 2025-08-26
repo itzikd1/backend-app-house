@@ -29,6 +29,7 @@ const healthRoute = require('./api/health');
 const usersRoute = require('./routes/users');
 const authRoute = require('./routes/auth');
 const familiesRoute = require('./routes/families');
+const tasksRoute = require('./routes/tasks');
 
 // API Documentation - Swagger UI
 if (process.env.NODE_ENV !== 'production') {
@@ -41,6 +42,7 @@ app.use('/api/health', healthRoute);
 app.use('/api/auth', authRoute);
 app.use('/api/users', usersRoute);
 app.use('/api/families', familiesRoute);
+app.use('/api/tasks', tasksRoute);
 
 // Serve static files from the 'public' directory
 app.use(express.static(path.join(__dirname, 'public')));
