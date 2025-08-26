@@ -5,65 +5,6 @@ const { authenticate } = require('../lib/middleware/auth');
 const { validateRequest } = require('../middleware/validation');
 
 const prisma = new PrismaClient();
-
-/**
- * @swagger
- * components:
- *   schemas:
- *     Task:
- *       type: object
- *       properties:
- *         id:
- *           type: string
- *         title:
- *           type: string
- *         description:
- *           type: string
- *         completed:
- *           type: boolean
- *         completedAt:
- *           type: string
- *           format: date-time
- *         dueDate:
- *           type: string
- *           format: date-time
- *         priority:
- *           type: string
- *           enum: [Low, Medium, High]
- *         repeatFrequency:
- *           type: string
- *         createdAt:
- *           type: string
- *           format: date-time
- *         updatedAt:
- *           type: string
- *           format: date-time
- *         creatorId:
- *           type: string
- *         familyId:
- *           type: string
- *         categoryId:
- *           type: string
- */
-
-/**
- * @swagger
- * /api/tasks:
- *   get:
- *     summary: Get all tasks for the current user's family
- *     tags: [Tasks]
- *     security:
- *       - bearerAuth: []
- *     responses:
- *       200:
- *         description: List of tasks
- *         content:
- *           application/json:
- *             schema:
- *               type: array
- *               items:
- *                 $ref: '#/components/schemas/Task'
- */
 router.get('/', authenticate, async (req, res) => {
   try {
     // Get user's family ID
@@ -98,31 +39,7 @@ router.get('/', authenticate, async (req, res) => {
   }
 });
 
-/**
- * @swagger
- * /api/tasks/{id}:
- *   get:
- *     summary: Get a single task by ID
- *     tags: [Tasks]
- *     security:
- *       - bearerAuth: []
- *     parameters:
- *       - in: path
- *         name: id
- *         required: true
- *         schema:
- *           type: string
- *         description: Task ID
- *     responses:
- *       200:
- *         description: Task details
- *         content:
- *           application/json:
- *             schema:
- *               $ref: '#/components/schemas/Task'
- *       404:
- *         description: Task not found
- */
+
 router.get('/:id', authenticate, async (req, res) => {
   try {
     const task = await prisma.task.findUnique({
@@ -160,45 +77,7 @@ router.get('/:id', authenticate, async (req, res) => {
   }
 });
 
-/**
- * @swagger
- * /api/tasks:
- *   post:
- *     summary: Create a new task
- *     tags: [Tasks]
- *     security:
- *       - bearerAuth: []
- *     requestBody:
- *       required: true
- *       content:
- *         application/json:
- *           schema:
- *             type: object
- *             required:
- *               - title
- *             properties:
- *               title:
- *                 type: string
- *               description:
- *                 type: string
- *               dueDate:
- *                 type: string
- *                 format: date-time
- *               priority:
- *                 type: string
- *                 enum: [Low, Medium, High]
- *               repeatFrequency:
- *                 type: string
- *               categoryId:
- *                 type: string
- *     responses:
- *       201:
- *         description: Task created successfully
- *         content:
- *           application/json:
- *             schema:
- *               $ref: '#/components/schemas/Task'
- */
+
 router.post('/', 
   authenticate,
   validateRequest({
@@ -256,56 +135,7 @@ router.post('/',
   }
 );
 
-/**
- * @swagger
- * /api/tasks/{id}:
- *   put:
- *     summary: Update a task
- *     tags: [Tasks]
- *     security:
- *       - bearerAuth: []
- *     parameters:
- *       - in: path
- *         name: id
- *         required: true
- *         schema:
- *           type: string
- *         description: Task ID
- *     requestBody:
- *       required: true
- *       content:
- *         application/json:
- *           schema:
- *             type: object
- *             properties:
- *               title:
- *                 type: string
- *               description:
- *                 type: string
- *               completed:
- *                 type: boolean
- *               dueDate:
- *                 type: string
- *                 format: date-time
- *               priority:
- *                 type: string
- *                 enum: [Low, Medium, High]
- *               repeatFrequency:
- *                 type: string
- *               categoryId:
- *                 type: string
- *     responses:
- *       200:
- *         description: Task updated successfully
- *         content:
- *           application/json:
- *             schema:
- *               $ref: '#/components/schemas/Task'
- *       403:
- *         description: Not authorized to update this task
- *       404:
- *         description: Task not found
- */
+
 router.put('/:id', 
   authenticate,
   validateRequest({
@@ -373,29 +203,7 @@ router.put('/:id',
   }
 );
 
-/**
- * @swagger
- * /api/tasks/{id}:
- *   delete:
- *     summary: Delete a task
- *     tags: [Tasks]
- *     security:
- *       - bearerAuth: []
- *     parameters:
- *       - in: path
- *         name: id
- *         required: true
- *         schema:
- *           type: string
- *         description: Task ID
- *     responses:
- *       204:
- *         description: Task deleted successfully
- *       403:
- *         description: Not authorized to delete this task
- *       404:
- *         description: Task not found
- */
+
 router.delete('/:id', authenticate, async (req, res) => {
   try {
     const { id } = req.params;
