@@ -11,8 +11,6 @@
     "prisma:migrate": "prisma migrate deploy",
     "prisma:studio": "prisma studio"
   },
-
-
   "author": "Itzik",
   "license": "ISC",
   "dependencies": {
