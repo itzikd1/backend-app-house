@@ -57,8 +57,6 @@
   - Indexes and select usage could be improved
 - Environment Configuration
   - Separate configs for different environments could be improved
-- Database Migrations
-  - Migrations are present, but documentation could be improved
 
 ## ❌ Not Implemented
 - Pagination and Filtering
@@ -75,8 +73,6 @@
   - No DI container (e.g., `awilix`)
 - Health Check Endpoint
   - No `/health` endpoint for monitoring (health route exists, but may need improvement for monitoring)
-- Dockerize Your Application
-  - No `Dockerfile` or `docker-compose.yml`
 - API Security
   - No `helmet` for Express security
   - No CSRF protection
