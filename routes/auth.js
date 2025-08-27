@@ -176,7 +176,14 @@ router.get('/me', authenticate, async (req, res) => {
       return res.status(404).json({ error: 'User not found' });
     }
     
-    res.json(user);
+    // Get the token from the Authorization header
+    const authHeader = req.headers['authorization'];
+    const token = authHeader && authHeader.split(' ')[1];
+    
+    res.json({
+      user,
+      token
+    });
   } catch (error) {
     console.error('Error fetching user profile:', error);
     res.status(500).json({ error: 'Failed to fetch user profile' });

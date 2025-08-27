@@ -7,21 +7,39 @@ const { validateRequest } = require('../middleware/validation');
 const prisma = new PrismaClient();
 router.get('/', authenticate, async (req, res) => {
   try {
+    console.log('User from auth middleware:', req.user); // Debug log
+    
+    if (!req.user || !req.user.id) {
+      console.error('No user ID found in request');
+      return res.status(401).json({ error: 'User not authenticated' });
+    }
+
     // Get user's family ID
     const user = await prisma.user.findUnique({
       where: { id: req.user.id },
-      select: { familyId: true }
+      select: { 
+        id: true,
+        familyId: true 
+      }
     });
 
+    if (!user) {
+      console.error('User not found in database');
+      return res.status(404).json({ error: 'User not found' });
+    }
+
     if (!user.familyId) {
+      console.log(`User ${user.id} is not part of a family`);
       return res.status(400).json({ error: 'User is not part of a family' });
     }
 
+    console.log(`Fetching tasks for user ${user.id} in family ${user.familyId}`);
+    
     const tasks = await prisma.task.findMany({
       where: {
         OR: [
           { familyId: user.familyId },
-          { creatorId: req.user.id }
+          { creatorId: user.id }
         ]
       },
       include: {
