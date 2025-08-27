@@ -9,10 +9,8 @@ const setupSwagger = require('./config/swagger');
 // Import middleware
 const errorHandler = require('./middleware/errorHandler');
 const logger = require('./middleware/logger');
-const { authenticate } = require('./lib/middleware/auth');
 
 const app = express();
-const PORT = process.env.PORT || 3000;
 
 // Middleware
 app.use(cors()); // Enable CORS for all routes
@@ -24,8 +22,8 @@ app.use(express.json()); // Parse JSON bodies
 app.use(logger); // Request logging
 
 // Import API routes
-const itemsRoute = require('./api/items');
-const healthRoute = require('./api/health');
+const itemsRoute = require('./routes/items');
+const healthRoute = require('./routes/health');
 const usersRoute = require('./routes/users');
 const authRoute = require('./routes/auth');
 const familiesRoute = require('./routes/families');
@@ -49,13 +47,13 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 // Simple root route with API documentation link
 app.get('/', (req, res) => {
-  const apiDocsLink = process.env.NODE_ENV !== 'production' 
+  const apiDocsLink = process.env.NODE_ENV !== 'production'
     ? '<li><a href="/api-docs">API Documentation (Swagger UI)</a></li>'
     : '';
-    
+
   res.send(`
     <!DOCTYPE html>
-    <html>
+    <html lang="en">
     <head>
       <title>Express API Server</title>
       <style>
@@ -117,7 +115,7 @@ app.get('/', (req, res) => {
 
 // Handle 404 - Keep this as the last route
 app.use((req, res) => {
-  res.status(404).json({ 
+  res.status(404).json({
     success: false,
     error: 'Not Found',
     message: `The requested resource ${req.originalUrl} was not found`
@@ -127,22 +125,5 @@ app.use((req, res) => {
 // Use the error handling middleware
 app.use(errorHandler);
 
-// Start the server
-const server = app.listen(PORT, () => {
-  console.log(`\n🚀 Server is running on http://localhost:${PORT}`);
-  console.log('\nAPI Endpoints:');
-  console.log(`- GET    http://localhost:${PORT}/api/items`);
-  console.log(`- POST   http://localhost:${PORT}/api/items`);
-  console.log(`- GET    http://localhost:${PORT}/api/users`);
-  console.log(`- POST   http://localhost:${PORT}/api/users`);
-  console.log(`- GET    http://localhost:${PORT}/api/health\n`);
-  console.log('Authentication:');
-  console.log(`- POST   http://localhost:${PORT}/api/auth/signup`);
-  console.log(`- POST   http://localhost:${PORT}/api/auth/signin\n`);
-});
-
-// Handle unhandled promise rejections
-process.on('unhandledRejection', (err) => {
-  console.error('Unhandled Rejection:', err);
-  server.close(() => process.exit(1));
-});
+// Export the Express app for Vercel
+module.exports = app;

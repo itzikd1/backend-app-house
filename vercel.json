@@ -9,16 +9,11 @@
       }
     },
     {
-      "src": "api/**/*.js",
-      "use": "@vercel/node"
-    },
-    {
       "src": "server.js",
       "use": "@vercel/node"
     }
   ],
   "routes": [
-    { "src": "/api/(.*)", "dest": "/api/$1" },
     { "src": "/(.*)", "dest": "/server.js" }
   ],
   "buildCommand": "npm install && npm run build",
@@ -30,6 +25,5 @@
   },
   "github": {
     "enabled": false
-  },
-  "public": true
+  }
 }
