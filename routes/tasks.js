@@ -28,22 +28,32 @@ router.get('/', authenticate, async (req, res) => {
       return res.status(404).json({ error: 'User not found' });
     }
 
-    if (!user.familyId) {
-      console.log(`User ${user.id} is not part of a family`);
-      return res.status(400).json({ error: 'User is not part of a family' });
-    }
+    // User can have personal tasks even if not in a family
+    console.log(`Fetching tasks for user ${user.id}${user.familyId ? ' in family ' + user.familyId : ' (personal tasks only)'}`);
 
     console.log(`Fetching tasks for user ${user.id} in family ${user.familyId}`);
     
+    // Query tasks: user's personal tasks + family tasks (if in a family)
+    const whereClause = user.familyId 
+      ? {
+          OR: [
+            { familyId: user.familyId },
+            { creatorId: user.id, familyId: null } // Personal tasks
+          ]
+        }
+      : { creatorId: user.id, familyId: null }; // Only personal tasks
+
     const tasks = await prisma.task.findMany({
-      where: {
-        OR: [
-          { familyId: user.familyId },
-          { creatorId: user.id }
-        ]
-      },
+      where: whereClause,
       include: {
-        category: true
+        category: true,
+        creator: {
+          select: {
+            id: true,
+            name: true,
+            email: true
+          }
+        }
       },
       orderBy: {
         createdAt: 'desc'
@@ -84,7 +94,7 @@ router.get('/:id', authenticate, async (req, res) => {
       select: { familyId: true }
     });
 
-    if (task.familyId !== user.familyId && task.creatorId !== req.user.id) {
+    if (task.familyId && task.familyId !== user.familyId && task.creatorId !== req.user.id) {
       return res.status(403).json({ error: 'Not authorized to access this task' });
     }
 
@@ -123,9 +133,7 @@ router.post('/',
         return res.status(404).json({ error: 'User not found' });
       }
 
-      if (!user.familyId) {
-        return res.status(400).json({ error: 'User is not part of a family' });
-      }
+      // User can create tasks even if not in a family
 
       // Check if category exists if provided
       if (categoryId) {
@@ -152,9 +160,11 @@ router.post('/',
           creator: {
             connect: { id: user.id }
           },
-          family: {
-            connect: { id: user.familyId }
-          },
+          ...(user.familyId && {
+            family: {
+              connect: { id: user.familyId }
+            }
+          }),
           ...(categoryId && {
             category: {
               connect: { id: categoryId }
@@ -286,7 +296,7 @@ router.delete('/:id', authenticate, async (req, res) => {
       where: { id }
     });
 
-    res.status(204).send();
+    res.json({ success: true, message: 'Task deleted successfully' });
   } catch (error) {
     console.error('Error deleting task:', error);
     res.status(500).json({ error: 'Failed to delete task' });

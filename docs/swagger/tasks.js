@@ -7,8 +7,9 @@
  *       properties:
  *         id:
  *           type: string
- *           format: uuid
- *           description: The auto-generated ID of the task
+ *           pattern: '^[a-z0-9]{24}$'
+ *           example: "cmeti79jt0002ul0saico49fl"
+ *           description: The auto-generated ID of the task (alphanumeric, 24 characters)
  *         title:
  *           type: string
  *           description: The title of the task
@@ -43,15 +44,18 @@
  *           description: When the task was last updated
  *         creatorId:
  *           type: string
- *           format: uuid
+ *           pattern: '^[a-z0-9]{24}$'
+ *           example: "cmet3ubly0000ulywceu2aau9"
  *           description: ID of the user who created the task
  *         familyId:
  *           type: string
- *           format: uuid
+ *           pattern: '^[a-z0-9]{24}$'
+ *           example: "cmet3wmp40001ulywjf7rj6m2"
  *           description: ID of the family this task belongs to
  *         categoryId:
  *           type: string
- *           format: uuid
+ *           pattern: '^[a-z0-9]{24}$'
+ *           example: "cmet3wmp40001ulywjf7rj6m2"
  *           description: ID of the task's category
  *         category:
  *           $ref: '#/components/schemas/Category'
@@ -60,13 +64,13 @@
  *           properties:
  *             id:
  *               type: string
- *               format: uuid
+ *               pattern: '^[a-z0-9]{24}$'
  *             name:
  *               type: string
  *             email:
  *               type: string
  *       example:
- *         id: 550e8400-e29b-41d4-a716-446655440000
+ *         id: cmeti79jt0002ul0saico49fl
  *         title: Weekly Groceries
  *         description: Buy milk, eggs, and bread
  *         completed: false
@@ -75,16 +79,16 @@
  *         repeatFrequency: weekly
  *         createdAt: 2023-01-01T00:00:00.000Z
  *         updatedAt: 2023-01-01T00:00:00.000Z
- *         creatorId: 550e8400-e29b-41d4-a716-446655440001
- *         familyId: 550e8400-e29b-41d4-a716-446655440002
- *         categoryId: 550e8400-e29b-41d4-a716-446655440003
+ *         creatorId: cmet3ubly0000ulywceu2aau9
+ *         familyId: cmet3wmp40001ulywjf7rj6m2
+ *         categoryId: cmet3wmp40001ulywjf7rj6m2
  *
  *     Category:
  *       type: object
  *       properties:
  *         id:
  *           type: string
- *           format: uuid
+ *           pattern: '^[a-z0-9]{24}$'
  *         name:
  *           type: string
  *         color:
@@ -99,7 +103,7 @@
  *           format: date-time
  *         familyId:
  *           type: string
- *           format: uuid
+ *           pattern: '^[a-z0-9]{24}$'
  *
  *     TaskInput:
  *       type: object
@@ -122,7 +126,7 @@
  *           type: string
  *         categoryId:
  *           type: string
- *           format: uuid
+ *           pattern: '^[a-z0-9]{24}$'
  */
 
 /**
@@ -192,8 +196,9 @@
  *         required: true
  *         schema:
  *           type: string
- *           format: uuid
- *         description: Task ID
+ *           pattern: '^[a-z0-9]{24}$'
+ *           example: "cmeti79jt0002ul0saico49fl"
+ *         description: Task ID (24-character alphanumeric)
  *     responses:
  *       200:
  *         description: Task details
@@ -219,8 +224,9 @@
  *         required: true
  *         schema:
  *           type: string
- *           format: uuid
- *         description: Task ID
+ *           pattern: '^[a-z0-9]{24}$'
+ *           example: "cmeti79jt0002ul0saico49fl"
+ *         description: Task ID (24-character alphanumeric)
  *     requestBody:
  *       required: true
  *       content:
@@ -252,8 +258,9 @@
  *         required: true
  *         schema:
  *           type: string
- *           format: uuid
- *         description: Task ID
+ *           pattern: '^[a-z0-9]{24}$'
+ *           example: "cmeti79jt0002ul0saico49fl"
+ *         description: Task ID (24-character alphanumeric)
  *     responses:
  *       204:
  *         description: Task deleted successfully
