@@ -113,11 +113,32 @@ router.post('/',
       // Get user's family ID
       const user = await prisma.user.findUnique({
         where: { id: req.user.id },
-        select: { familyId: true }
+        select: { 
+          id: true,
+          familyId: true 
+        }
       });
+
+      if (!user) {
+        return res.status(404).json({ error: 'User not found' });
+      }
 
       if (!user.familyId) {
         return res.status(400).json({ error: 'User is not part of a family' });
+      }
+
+      // Check if category exists if provided
+      if (categoryId) {
+        const category = await prisma.category.findUnique({
+          where: { id: categoryId }
+        });
+        
+        if (!category) {
+          return res.status(404).json({ 
+            error: 'Category not found',
+            details: `No category found with ID: ${categoryId}`
+          });
+        }
       }
 
       // Create the task
@@ -129,7 +150,7 @@ router.post('/',
           priority,
           repeatFrequency,
           creator: {
-            connect: { id: req.user.id }
+            connect: { id: user.id }
           },
           family: {
             connect: { id: user.familyId }
@@ -145,10 +166,25 @@ router.post('/',
         }
       });
 
-      res.status(201).json(task);
+      res.status(201).json({
+        success: true,
+        data: task
+      });
     } catch (error) {
       console.error('Error creating task:', error);
-      res.status(500).json({ error: 'Failed to create task' });
+      
+      // Handle specific Prisma errors
+      if (error.code === 'P2025') {
+        return res.status(404).json({
+          error: 'Related record not found',
+          details: error.meta?.cause || 'A related record required for this operation was not found'
+        });
+      }
+      
+      res.status(500).json({ 
+        error: 'Failed to create task',
+        details: process.env.NODE_ENV === 'development' ? error.message : undefined
+      });
     }
   }
 );
