@@ -60,8 +60,8 @@
 - Pagination and Filtering
   - No pagination, filtering, or sorting on list endpoints ❌
 - Testing
-  - No unit or integration tests for entities/endpoints ⚠️
-  - No test framework (Jest/Mocha) set up ⚠️
+  - Unit and integration tests for entities/endpoints started ⚠️
+  - Test framework (Jest) set up ✅
   - No test databases for different environments ❌
 - API Versioning
   - No API versioning (e.g., `/api/v1/users`) ❌
