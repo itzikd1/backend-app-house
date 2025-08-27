@@ -1,10 +1,28 @@
 // Import Prisma client
 const prisma = require('../../lib/prisma');
+const { verifyToken } = require('../../src/middleware/auth.middleware');
 
 // Vercel Serverless Function for items API
 // @route   GET/POST/PUT/DELETE /api/items
-// @access  Public
+// @access  Private
 module.exports = async (req, res) => {
+  // Verify token and get user ID
+  const token = req.headers.authorization?.split(' ')[1];
+  if (!token) {
+    return res.status(401).json({ error: 'Authentication required' });
+  }
+
+  let userId;
+  try {
+    const decoded = await new Promise((resolve, reject) => {
+      verifyToken(req, { json: (obj) => reject(obj) }, () => {
+        resolve(req.userId);
+      });
+    });
+    userId = decoded;
+  } catch (error) {
+    return res.status(401).json({ error: 'Invalid or expired token' });
+  }
   // Set CORS headers
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
@@ -19,6 +37,7 @@ module.exports = async (req, res) => {
   if (req.method === 'GET') {
     try {
       const items = await prisma.item.findMany({
+        where: { userId },
         orderBy: {
           createdAt: 'desc',
         },
@@ -46,7 +65,8 @@ module.exports = async (req, res) => {
       
       const newItem = await prisma.item.create({
         data: {
-          name: name
+          name: name,
+          userId: userId
         },
       });
       
@@ -74,14 +94,17 @@ module.exports = async (req, res) => {
         });
       }
       
-      // Check if item exists
-      const existingItem = await prisma.item.findUnique({
-        where: { id: id },
+      // Check if item exists and belongs to user
+      const existingItem = await prisma.item.findFirst({
+        where: { 
+          id: id,
+          userId: userId 
+        },
       });
       
       if (!existingItem) {
         return res.status(404).json({ 
-          error: 'Item not found' 
+          error: 'Item not found or access denied' 
         });
       }
       
@@ -114,24 +137,26 @@ module.exports = async (req, res) => {
         });
       }
       
-      // Check if item exists
-      const existingItem = await prisma.item.findUnique({
-        where: { id: id },
+      // Check if item exists and belongs to user
+      const existingItem = await prisma.item.findFirst({
+        where: { 
+          id: id,
+          userId: userId 
+        },
       });
       
       if (!existingItem) {
         return res.status(404).json({ 
-          error: 'Item not found' 
+          error: 'Item not found or access denied' 
         });
       }
       
-      const deletedItem = await prisma.item.delete({
+      await prisma.item.delete({
         where: { id: id },
       });
       
       return res.status(200).json({ 
         message: 'Item deleted successfully',
-        item: deletedItem
       });
     } catch (err) {
       console.error('Error deleting item:', err);
