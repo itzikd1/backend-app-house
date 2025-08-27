@@ -29,6 +29,9 @@ const familiesRoute = require('./routes/families');
 const tasksRoute = require('./routes/tasks');
 const carRoute = require('./routes/car');
 const carLocationHistoryRoute = require('./routes/carLocationHistory');
+const noteRoute = require('./routes/note');
+const recipeRoute = require('./routes/recipe');
+const goalRoute = require('./routes/goal');
 
 // API Documentation - Swagger UI
 if (process.env.NODE_ENV !== 'production') {
@@ -43,6 +46,9 @@ app.use('/api/families', familiesRoute);
 app.use('/api/tasks', tasksRoute);
 app.use('/api/car', carRoute);
 app.use('/api/car-location-history', carLocationHistoryRoute);
+app.use('/api/note', noteRoute);
+app.use('/api/recipe', recipeRoute);
+app.use('/api/goal', goalRoute);
 
 // Serve static files from the 'public' directory
 app.use(express.static(path.join(__dirname, 'public')));
