@@ -9,10 +9,8 @@ const setupSwagger = require('./config/swagger');
 // Import middleware
 const errorHandler = require('./middleware/errorHandler');
 const logger = require('./middleware/logger');
-const { authenticate } = require('./lib/middleware/auth');
 
 const app = express();
-const PORT = process.env.PORT || 3000;
 
 // Middleware
 app.use(cors()); // Enable CORS for all routes
@@ -24,12 +22,16 @@ app.use(express.json()); // Parse JSON bodies
 app.use(logger); // Request logging
 
 // Import API routes
-const itemsRoute = require('./api/items');
-const healthRoute = require('./api/health');
+const healthRoute = require('./routes/health');
 const usersRoute = require('./routes/users');
 const authRoute = require('./routes/auth');
 const familiesRoute = require('./routes/families');
 const tasksRoute = require('./routes/tasks');
+const carRoute = require('./routes/car');
+const carLocationHistoryRoute = require('./routes/carLocationHistory');
+const noteRoute = require('./routes/note');
+const recipeRoute = require('./routes/recipe');
+const goalRoute = require('./routes/goal');
 
 // API Documentation - Swagger UI
 if (process.env.NODE_ENV !== 'production') {
@@ -37,25 +39,29 @@ if (process.env.NODE_ENV !== 'production') {
 }
 
 // API routes
-app.use('/api/items', itemsRoute);
 app.use('/api/health', healthRoute);
 app.use('/api/auth', authRoute);
 app.use('/api/users', usersRoute);
 app.use('/api/families', familiesRoute);
 app.use('/api/tasks', tasksRoute);
+app.use('/api/car', carRoute);
+app.use('/api/car-location-history', carLocationHistoryRoute);
+app.use('/api/note', noteRoute);
+app.use('/api/recipe', recipeRoute);
+app.use('/api/goal', goalRoute);
 
 // Serve static files from the 'public' directory
 app.use(express.static(path.join(__dirname, 'public')));
 
 // Simple root route with API documentation link
 app.get('/', (req, res) => {
-  const apiDocsLink = process.env.NODE_ENV !== 'production' 
+  const apiDocsLink = process.env.NODE_ENV !== 'production'
     ? '<li><a href="/api-docs">API Documentation (Swagger UI)</a></li>'
     : '';
-    
+
   res.send(`
     <!DOCTYPE html>
-    <html>
+    <html lang="en">
     <head>
       <title>Express API Server</title>
       <style>
@@ -72,7 +78,6 @@ app.get('/', (req, res) => {
         
         <h2>Quick Links</h2>
         <ul>
-          <li><a href="/api/items">List all items (GET /api/items)</a></li>
           <li><a href="/api/health">Health check (GET /api/health)</a></li>
           <li><a href="/api/users">List users (GET /api/users) - Protected</a></li>
           <li><a href="/api/profile">User profile (GET /api/profile) - Protected</a></li>
@@ -100,12 +105,6 @@ app.get('/', (req, res) => {
         </div>
         
         <div class="endpoint">
-          <h3>Items</h3>
-          <p><strong>GET /api/items</strong> - Get all items</p>
-          <p><strong>POST /api/items</strong> - Create a new item</p>
-        </div>
-        
-        <div class="endpoint">
           <h3>Health</h3>
           <p><strong>GET /api/health</strong> - Check API health status</p>
         </div>
@@ -117,7 +116,7 @@ app.get('/', (req, res) => {
 
 // Handle 404 - Keep this as the last route
 app.use((req, res) => {
-  res.status(404).json({ 
+  res.status(404).json({
     success: false,
     error: 'Not Found',
     message: `The requested resource ${req.originalUrl} was not found`
@@ -127,22 +126,5 @@ app.use((req, res) => {
 // Use the error handling middleware
 app.use(errorHandler);
 
-// Start the server
-const server = app.listen(PORT, () => {
-  console.log(`\n🚀 Server is running on http://localhost:${PORT}`);
-  console.log('\nAPI Endpoints:');
-  console.log(`- GET    http://localhost:${PORT}/api/items`);
-  console.log(`- POST   http://localhost:${PORT}/api/items`);
-  console.log(`- GET    http://localhost:${PORT}/api/users`);
-  console.log(`- POST   http://localhost:${PORT}/api/users`);
-  console.log(`- GET    http://localhost:${PORT}/api/health\n`);
-  console.log('Authentication:');
-  console.log(`- POST   http://localhost:${PORT}/api/auth/signup`);
-  console.log(`- POST   http://localhost:${PORT}/api/auth/signin\n`);
-});
-
-// Handle unhandled promise rejections
-process.on('unhandledRejection', (err) => {
-  console.error('Unhandled Rejection:', err);
-  server.close(() => process.exit(1));
-});
+// Export the Express app for Vercel
+module.exports = app;

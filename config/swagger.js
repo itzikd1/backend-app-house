@@ -42,14 +42,16 @@ const specs = swaggerJsdoc(swaggerOptions);
 const setupSwagger = (app) => {
   // Swagger UI
   app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(specs, { explorer: true }));
-  
+
   // Docs in JSON format
   app.get('/api-docs.json', (req, res) => {
     res.setHeader('Content-Type', 'application/json');
     res.send(specs);
   });
 
-  console.log(`📚 API Documentation available at http://localhost:${process.env.PORT || 3000}/api-docs`);
+  if (process.env.NODE_ENV !== 'production') {
+    console.log(`📚 API Documentation available at http://localhost:${process.env.PORT || 3000}/api-docs`);
+  }
 };
 
 module.exports = setupSwagger;
