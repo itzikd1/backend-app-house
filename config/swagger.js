@@ -13,7 +13,8 @@ const definitionFiles = fs.readdirSync(swaggerDir)
   .filter(file => file.endsWith('.js') && file !== 'base.js')
   .map(file => path.join(swaggerDir, file));
 
-// Remove requiring Swagger doc files as modules
+// Load all definition files
+const definitions = definitionFiles.map(file => require(file));
 
 // Combine all paths and components
 const combinedPaths = {};

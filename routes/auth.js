@@ -2,7 +2,7 @@ const express = require('express');
 const router = express.Router();
 const jwt = require('jsonwebtoken');
 const authService = require('../lib/services/authService');
-const { authenticate } = require('../middleware/auth');
+const { authenticate } = require('../lib/middleware/auth');
 const { validateRequest } = require('../middleware/validation');
 const { PrismaClient } = require('@prisma/client');
 
