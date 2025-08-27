@@ -7,7 +7,7 @@
 
 /**
  * @swagger
- * /recipe:
+ * /api/recipe:
  *   post:
  *     summary: Create a new recipe
  *     tags: [Recipe]
@@ -36,7 +36,7 @@
  *               type: array
  *               items:
  *                 $ref: '#/components/schemas/Recipe'
- * /recipe/{id}:
+ * /api/recipe/{id}:
  *   get:
  *     summary: Get recipe by ID
  *     tags: [Recipe]
@@ -112,4 +112,3 @@
  *           type: string
  *           format: date-time
  */
-

@@ -7,7 +7,7 @@
 
 /**
  * @swagger
- * /car:
+ * /api/car:
  *   post:
  *     summary: Create a new car
  *     tags: [Car]
@@ -36,7 +36,7 @@
  *               type: array
  *               items:
  *                 $ref: '#/components/schemas/Car'
- * /car/{id}:
+ * /api/car/{id}:
  *   get:
  *     summary: Get car by ID
  *     tags: [Car]
@@ -112,4 +112,3 @@
  *           type: string
  *           format: date-time
  */
-

@@ -7,7 +7,7 @@
 
 /**
  * @swagger
- * /savedShoppingListItem:
+ * /api/savedShoppingListItem:
  *   post:
  *     summary: Create a new saved shopping list item
  *     tags: [SavedShoppingListItem]
@@ -71,7 +71,7 @@
  *           application/json:
  *             schema:
  *               $ref: '#/components/schemas/Error'
- * /savedShoppingListItem/{id}:
+ * /api/savedShoppingListItem/{id}:
  *   get:
  *     summary: Get saved shopping list item by ID
  *     tags: [SavedShoppingListItem]

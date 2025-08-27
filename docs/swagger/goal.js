@@ -7,7 +7,7 @@
 
 /**
  * @swagger
- * /goal:
+ * /api/goal:
  *   post:
  *     summary: Create a new goal
  *     tags: [Goal]
@@ -36,7 +36,7 @@
  *               type: array
  *               items:
  *                 $ref: '#/components/schemas/Goal'
- * /goal/{id}:
+ * /api/goal/{id}:
  *   get:
  *     summary: Get goal by ID
  *     tags: [Goal]
@@ -124,4 +124,3 @@
  *           type: string
  *           format: date-time
  */
-

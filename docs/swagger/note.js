@@ -7,7 +7,7 @@
 
 /**
  * @swagger
- * /note:
+ * /api/note:
  *   post:
  *     summary: Create a new note
  *     tags: [Note]
@@ -36,7 +36,7 @@
  *               type: array
  *               items:
  *                 $ref: '#/components/schemas/Note'
- * /note/{id}:
+ * /api/note/{id}:
  *   get:
  *     summary: Get note by ID
  *     tags: [Note]
@@ -112,4 +112,3 @@
  *           type: string
  *           format: date-time
  */
-

@@ -7,7 +7,7 @@
 
 /**
  * @swagger
- * /carLocationHistory:
+ * /api/carLocationHistory:
  *   post:
  *     summary: Create a new car location history
  *     tags: [CarLocationHistory]
@@ -36,7 +36,7 @@
  *               type: array
  *               items:
  *                 $ref: '#/components/schemas/CarLocationHistory'
- * /carLocationHistory/{id}:
+ * /api/carLocationHistory/{id}:
  *   get:
  *     summary: Get car location history by ID
  *     tags: [CarLocationHistory]
@@ -115,4 +115,3 @@
  *           type: string
  *           format: date-time
  */
-

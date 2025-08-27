@@ -7,7 +7,7 @@
 
 /**
  * @swagger
- * /shoppingItem:
+ * /api/shoppingItem:
  *   post:
  *     summary: Create a new shopping item
  *     tags: [ShoppingItem]
@@ -71,7 +71,7 @@
  *           application/json:
  *             schema:
  *               $ref: '#/components/schemas/Error'
- * /shoppingItem/{id}:
+ * /api/shoppingItem/{id}:
  *   get:
  *     summary: Get shopping item by ID
  *     tags: [ShoppingItem]
