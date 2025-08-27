@@ -22,7 +22,6 @@ app.use(express.json()); // Parse JSON bodies
 app.use(logger); // Request logging
 
 // Import API routes
-const itemsRoute = require('./routes/items');
 const healthRoute = require('./routes/health');
 const usersRoute = require('./routes/users');
 const authRoute = require('./routes/auth');
@@ -35,7 +34,6 @@ if (process.env.NODE_ENV !== 'production') {
 }
 
 // API routes
-app.use('/api/items', itemsRoute);
 app.use('/api/health', healthRoute);
 app.use('/api/auth', authRoute);
 app.use('/api/users', usersRoute);
@@ -70,7 +68,6 @@ app.get('/', (req, res) => {
         
         <h2>Quick Links</h2>
         <ul>
-          <li><a href="/api/items">List all items (GET /api/items)</a></li>
           <li><a href="/api/health">Health check (GET /api/health)</a></li>
           <li><a href="/api/users">List users (GET /api/users) - Protected</a></li>
           <li><a href="/api/profile">User profile (GET /api/profile) - Protected</a></li>
@@ -95,12 +92,6 @@ app.get('/', (req, res) => {
           <h3>Profile</h3>
           <p><strong>GET /api/profile</strong> - Get current user's profile (Protected)</p>
           <p><strong>PATCH /api/profile</strong> - Update current user's profile (Protected)</p>
-        </div>
-        
-        <div class="endpoint">
-          <h3>Items</h3>
-          <p><strong>GET /api/items</strong> - Get all items</p>
-          <p><strong>POST /api/items</strong> - Create a new item</p>
         </div>
         
         <div class="endpoint">

@@ -17,7 +17,7 @@ router.get('/', authenticate, async (req, res) => {
         createdAt: true,
       },
     });
-    
+
     res.json({ data: users });
   } catch (error) {
     console.error('Error fetching users:', error);
@@ -29,7 +29,7 @@ router.get('/', authenticate, async (req, res) => {
 router.post('/', async (req, res) => {
   try {
     const { email, name, password, role = 'USER' } = req.body;
-    
+
     // Input validation
     if (!email || !name || !password) {
       return res.status(400).json({ error: 'Missing required fields' });

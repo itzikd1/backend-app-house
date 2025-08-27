@@ -8,49 +8,6 @@ const { PrismaClient } = require('@prisma/client');
 
 const prisma = new PrismaClient();
 
-/**
- * @swagger
- * /api/auth/register:
- *   post:
- *     summary: Register a new user
- *     tags: [Auth]
- *     requestBody:
- *       required: true
- *       content:
- *         application/json:
- *           schema:
- *             type: object
- *             required:
- *               - name
- *               - email
- *               - password
- *             properties:
- *               name:
- *                 type: string
- *               email:
- *                 type: string
- *                 format: email
- *               password:
- *                 type: string
- *                 format: password
- *                 minLength: 8
- *     responses:
- *       201:
- *         description: User registered successfully
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                 user:
- *                   $ref: '#/components/schemas/User'
- *                 token:
- *                   type: string
- *       400:
- *         description: Invalid input
- *       409:
- *         description: Email already in use
- */
 router.post('/register', validateRequest({
   name: 'required|string|min:2',
   email: 'required|email',
@@ -58,13 +15,13 @@ router.post('/register', validateRequest({
 }), async (req, res) => {
   try {
     const { name, email, password } = req.body;
-    
+
     // Check if user already exists
     const existingUser = await prisma.user.findUnique({ where: { email } });
     if (existingUser) {
       return res.status(409).json({ error: 'Email already in use' });
     }
-    
+
     // Create user
     const newUser = await authService.register({
       name,
@@ -72,13 +29,13 @@ router.post('/register', validateRequest({
       password,
       role: 'FAMILY_MEMBER', // Default role
     });
-    
+
     // Generate token
     const token = jwt.sign({ userId: newUser.id }, process.env.JWT_SECRET || 'your-secret-key', { expiresIn: '1d' });
-    
+
     // Return user data without password and token
     const { password: _, ...userWithoutPassword } = newUser;
-    
+
     res.status(201).json({
       user: userWithoutPassword,
       token,
@@ -89,43 +46,6 @@ router.post('/register', validateRequest({
   }
 });
 
-/**
- * @swagger
- * /api/auth/login:
- *   post:
- *     summary: Login user
- *     tags: [Auth]
- *     requestBody:
- *       required: true
- *       content:
- *         application/json:
- *           schema:
- *             type: object
- *             required:
- *               - email
- *               - password
- *             properties:
- *               email:
- *                 type: string
- *                 format: email
- *               password:
- *                 type: string
- *                 format: password
- *     responses:
- *       200:
- *         description: Login successful
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                 user:
- *                   $ref: '#/components/schemas/User'
- *                 token:
- *                   type: string
- *       401:
- *         description: Invalid credentials
- */
 router.post('/login', validateRequest({
   email: 'required|email',
   password: 'required|string',
@@ -139,24 +59,6 @@ router.post('/login', validateRequest({
   }
 });
 
-/**
- * @swagger
- * /api/auth/me:
- *   get:
- *     summary: Get current user profile
- *     tags: [Auth]
- *     security:
- *       - bearerAuth: []
- *     responses:
- *       200:
- *         description: Current user data
- *         content:
- *           application/json:
- *             schema:
- *               $ref: '#/components/schemas/User'
- *       401:
- *         description: Unauthorized
- */
 router.get('/me', authenticate, async (req, res) => {
   try {
     const user = await prisma.user.findUnique({
@@ -171,15 +73,15 @@ router.get('/me', authenticate, async (req, res) => {
         updatedAt: true,
       },
     });
-    
+
     if (!user) {
       return res.status(404).json({ error: 'User not found' });
     }
-    
+
     // Get the token from the Authorization header
     const authHeader = req.headers['authorization'];
     const token = authHeader && authHeader.split(' ')[1];
-    
+
     res.json({
       user,
       token
