@@ -1,6 +1,9 @@
 const noteController = require('../note');
+const noteService = require('../../lib/services/noteService');
 
-const mockReq = (body = {}, params = {}, user = {}, headers = {}) => ({ body, params, user, headers });
+jest.mock('../../lib/services/noteService');
+
+const mockReq = (body = {}, params = {}, user = {}, query = {}) => ({ body, params, user, query });
 const mockRes = () => {
   const res = {};
   res.status = jest.fn().mockReturnThis();
@@ -206,11 +209,9 @@ describe('noteController', () => {
 
   describe('response structure', () => {
     it('should not return sensitive fields in response', async () => {
-      const req = mockReq({}, { id: 'note1' });
+      const req = mockReq({}, { id: 'note1' }, { id: 'user1' });
       const res = mockRes();
-      noteController.getNoteById = async (req, res) => {
-        res.json({ id: 'note1', content: 'Test note', secret: 'should-not-be-here' });
-      };
+      noteService.getNoteById.mockResolvedValue({ id: 'note1', content: 'Test note', secret: 'should-not-be-here' });
       await noteController.getNoteById(req, res);
       expect(res.json).toHaveBeenCalledWith(expect.not.objectContaining({ secret: expect.any(String) }));
     });
@@ -218,14 +219,16 @@ describe('noteController', () => {
 
   describe('filtering', () => {
     it('should filter notes by linked task', async () => {
-      const req = mockReq({}, {}, {}, {}, { taskId: 'task1' });
+      const req = mockReq({}, {}, { id: 'user1' }, { taskId: 'task1' });
       const res = mockRes();
-      noteController.getAllNotes = async (req, res) => {
-        const notes = req.query?.taskId === 'task1' ? [{ id: 'note1', content: 'Test note', taskId: 'task1' }] : [];
-        res.json(notes);
-      };
+      noteService.getAllNotes.mockResolvedValue([
+        { id: 'note1', content: 'Test note', taskId: 'task1' },
+        { id: 'note2', content: 'Other note', taskId: 'task2' },
+      ]);
       await noteController.getAllNotes(req, res);
-      expect(res.json).toHaveBeenCalledWith([{ id: 'note1', content: 'Test note', taskId: 'task1' }]);
+      expect(res.json).toHaveBeenCalledWith([
+        { id: 'note1', content: 'Test note', taskId: 'task1' }
+      ]);
     });
   });
 });

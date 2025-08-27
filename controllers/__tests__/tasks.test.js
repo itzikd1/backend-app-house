@@ -1,6 +1,9 @@
 const tasksController = require('../tasks');
+const taskService = require('../../lib/services/taskService');
 
-const mockReq = (body = {}, params = {}, user = {}, headers = {}) => ({ body, params, user, headers });
+jest.mock('../../lib/services/taskService');
+
+const mockReq = (body = {}, params = {}, user = {}, query = {}) => ({ body, params, user, query });
 const mockRes = () => {
   const res = {};
   res.status = jest.fn().mockReturnThis();
@@ -222,15 +225,16 @@ describe('tasksController', () => {
 
   describe('filtering', () => {
     it('should filter tasks by status', async () => {
-      const req = mockReq({}, {}, {}, {}, { status: 'completed' });
+      const req = mockReq({}, {}, { id: 'user1' }, { status: 'completed' });
       const res = mockRes();
-      tasksController.getTasks = async (req, res) => {
-        // Simulate filter
-        const tasks = req.query?.status === 'completed' ? [{ id: 'task2', title: 'Done', status: 'completed' }] : [];
-        res.json(tasks);
-      };
+      taskService.getTasksForUser.mockResolvedValue([
+        { id: 'task1', title: 'Todo', status: 'pending' },
+        { id: 'task2', title: 'Done', status: 'completed' },
+      ]);
       await tasksController.getTasks(req, res);
-      expect(res.json).toHaveBeenCalledWith([{ id: 'task2', title: 'Done', status: 'completed' }]);
+      expect(res.json).toHaveBeenCalledWith([
+        { id: 'task2', title: 'Done', status: 'completed' }
+      ]);
     });
   });
 });

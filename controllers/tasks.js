@@ -5,9 +5,13 @@ exports.getTasks = async (req, res) => {
     if (!req.user || !req.user.id) {
       return res.status(401).json({ error: 'User not authenticated' });
     }
-    const tasks = await taskService.getTasksForUser(req.user.id);
+    let tasks = await taskService.getTasksForUser(req.user.id);
     if (tasks === null) {
       return res.status(404).json({ error: 'User not found' });
+    }
+    // Filter by status if query param exists
+    if (req.query.status) {
+      tasks = tasks.filter(task => task.status === req.query.status);
     }
     res.json(tasks);
   } catch (error) {

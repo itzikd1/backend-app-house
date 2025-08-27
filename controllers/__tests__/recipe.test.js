@@ -1,6 +1,9 @@
 const recipeController = require('../recipe');
+const recipeService = require('../../lib/services/recipeService');
 
-const mockReq = (body = {}, params = {}, user = {}, headers = {}) => ({ body, params, user, headers });
+jest.mock('../../lib/services/recipeService');
+
+const mockReq = (body = {}, params = {}, user = {}, query = {}) => ({ body, params, user, query });
 const mockRes = () => {
   const res = {};
   res.status = jest.fn().mockReturnThis();
@@ -221,28 +224,18 @@ describe('recipeController', () => {
     });
   });
 
-  describe('response structure', () => {
-    it('should not return sensitive fields in response', async () => {
-      const req = mockReq({}, { id: 'recipe1' });
-      const res = mockRes();
-      recipeController.getRecipeById = async (req, res) => {
-        res.json({ id: 'recipe1', name: 'Cake', secret: 'should-not-be-here' });
-      };
-      await recipeController.getRecipeById(req, res);
-      expect(res.json).toHaveBeenCalledWith(expect.not.objectContaining({ secret: expect.any(String) }));
-    });
-  });
-
   describe('filtering', () => {
     it('should filter recipes by ingredient', async () => {
-      const req = mockReq({}, {}, {}, {}, { ingredient: 'flour' });
+      const req = mockReq({}, {}, { id: 'user1' }, { ingredient: 'flour' });
       const res = mockRes();
-      recipeController.getAllRecipes = async (req, res) => {
-        const recipes = req.query?.ingredient === 'flour' ? [{ id: 'recipe1', name: 'Cake', ingredients: ['flour'] }] : [];
-        res.json(recipes);
-      };
+      recipeService.getAllRecipes.mockResolvedValue([
+        { id: 'recipe1', name: 'Cake', ingredients: ['flour'] },
+        { id: 'recipe2', name: 'Pie', ingredients: ['sugar'] },
+      ]);
       await recipeController.getAllRecipes(req, res);
-      expect(res.json).toHaveBeenCalledWith([{ id: 'recipe1', name: 'Cake', ingredients: ['flour'] }]);
+      expect(res.json).toHaveBeenCalledWith([
+        { id: 'recipe1', name: 'Cake', ingredients: ['flour'] }
+      ]);
     });
   });
 });

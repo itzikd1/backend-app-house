@@ -2,8 +2,14 @@ const noteService = require('../lib/services/noteService');
 
 exports.getAllNotes = async (req, res) => {
   try {
-    const notes = await noteService.getAllNotes(req.user.id);
-    res.json({ data: notes });
+    let notes = await noteService.getAllNotes(req.user.id);
+    // Filter by linked task if query param exists
+    if (req.query.taskId) {
+      notes = notes.filter(note => note.taskId === req.query.taskId);
+    }
+    // Remove sensitive fields
+    notes = notes.map(({ secret, ...rest }) => rest);
+    res.json(notes);
   } catch (error) {
     res.status(500).json({ error: 'Failed to fetch notes' });
   }
@@ -15,7 +21,9 @@ exports.getNoteById = async (req, res) => {
     if (!note) {
       return res.status(404).json({ error: 'Note not found' });
     }
-    res.json({ data: note });
+    // Remove sensitive fields
+    const { secret, ...safeNote } = note;
+    res.json(safeNote);
   } catch (error) {
     res.status(500).json({ error: 'Failed to fetch note' });
   }

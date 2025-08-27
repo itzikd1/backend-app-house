@@ -2,8 +2,14 @@ const goalService = require('../lib/services/goalService');
 
 exports.getAllGoals = async (req, res) => {
   try {
-    const goals = await goalService.getAllGoals(req.user.id);
-    res.json({ data: goals });
+    let goals = await goalService.getAllGoals(req.user.id);
+    // Filter by status if query param exists
+    if (req.query.status) {
+      goals = goals.filter(goal => goal.status === req.query.status);
+    }
+    // Remove sensitive fields
+    goals = goals.map(({ secret, ...rest }) => rest);
+    res.json(goals);
   } catch (error) {
     res.status(500).json({ error: 'Failed to fetch goals' });
   }
@@ -15,7 +21,9 @@ exports.getGoalById = async (req, res) => {
     if (!goal) {
       return res.status(404).json({ error: 'Goal not found' });
     }
-    res.json({ data: goal });
+    // Remove sensitive fields
+    const { secret, ...safeGoal } = goal;
+    res.json(safeGoal);
   } catch (error) {
     res.status(500).json({ error: 'Failed to fetch goal' });
   }
@@ -108,4 +116,3 @@ exports.deleteNote = async (req, res) => {
     res.status(500).json({ error: 'Failed to delete note' });
   }
 };
-

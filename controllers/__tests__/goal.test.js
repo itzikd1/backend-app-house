@@ -1,6 +1,9 @@
 const goalController = require('../goal');
+const goalService = require('../../lib/services/goalService');
 
-const mockReq = (body = {}, params = {}, user = {}, headers = {}) => ({ body, params, user, headers });
+jest.mock('../../lib/services/goalService');
+
+const mockReq = (body = {}, params = {}, user = {}, query = {}) => ({ body, params, user, query });
 const mockRes = () => {
   const res = {};
   res.status = jest.fn().mockReturnThis();
@@ -220,11 +223,9 @@ describe('goalController', () => {
 
   describe('response structure', () => {
     it('should not return sensitive fields in response', async () => {
-      const req = mockReq({}, { id: 'goal1' });
+      const req = mockReq({}, { id: 'goal1' }, { id: 'user1' });
       const res = mockRes();
-      goalController.getGoalById = async (req, res) => {
-        res.json({ id: 'goal1', title: 'Test goal', secret: 'should-not-be-here' });
-      };
+      goalService.getGoalById.mockResolvedValue({ id: 'goal1', title: 'Test goal', secret: 'should-not-be-here' });
       await goalController.getGoalById(req, res);
       expect(res.json).toHaveBeenCalledWith(expect.not.objectContaining({ secret: expect.any(String) }));
     });
@@ -232,14 +233,16 @@ describe('goalController', () => {
 
   describe('filtering', () => {
     it('should filter goals by status', async () => {
-      const req = mockReq({}, {}, {}, {}, { status: 'completed' });
+      const req = mockReq({}, {}, { id: 'user1' }, { status: 'completed' });
       const res = mockRes();
-      goalController.getAllGoals = async (req, res) => {
-        const goals = req.query?.status === 'completed' ? [{ id: 'goal2', title: 'Done', status: 'completed' }] : [];
-        res.json(goals);
-      };
+      goalService.getAllGoals.mockResolvedValue([
+        { id: 'goal1', title: 'Test goal', status: 'active' },
+        { id: 'goal2', title: 'Done', status: 'completed' },
+      ]);
       await goalController.getAllGoals(req, res);
-      expect(res.json).toHaveBeenCalledWith([{ id: 'goal2', title: 'Done', status: 'completed' }]);
+      expect(res.json).toHaveBeenCalledWith([
+        { id: 'goal2', title: 'Done', status: 'completed' }
+      ]);
     });
   });
 });

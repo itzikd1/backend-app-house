@@ -2,8 +2,12 @@ const recipeService = require('../lib/services/recipeService');
 
 exports.getAllRecipes = async (req, res) => {
   try {
-    const recipes = await recipeService.getAllRecipes(req.user.id);
-    res.json({ data: recipes });
+    let recipes = await recipeService.getAllRecipes(req.user.id);
+    // Filter by ingredient if query param exists
+    if (req.query.ingredient) {
+      recipes = recipes.filter(recipe => Array.isArray(recipe.ingredients) && recipe.ingredients.includes(req.query.ingredient));
+    }
+    res.json(recipes);
   } catch (error) {
     res.status(500).json({ error: 'Failed to fetch recipes' });
   }
@@ -53,4 +57,3 @@ exports.deleteRecipe = async (req, res) => {
     res.status(500).json({ error: 'Failed to delete recipe' });
   }
 };
-
