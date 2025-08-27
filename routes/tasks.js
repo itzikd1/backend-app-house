@@ -7,8 +7,10 @@ const { validateRequest } = require('../middleware/validation');
 const prisma = new PrismaClient();
 router.get('/', authenticate, async (req, res) => {
   try {
-    console.log('User from auth middleware:', req.user); // Debug log
-    
+    if (process.env.NODE_ENV !== 'production') {
+      console.log('User from auth middleware:', req.user); // Debug log
+    }
+
     if (!req.user || !req.user.id) {
       console.error('No user ID found in request');
       return res.status(401).json({ error: 'User not authenticated' });
@@ -17,9 +19,9 @@ router.get('/', authenticate, async (req, res) => {
     // Get user's family ID
     const user = await prisma.user.findUnique({
       where: { id: req.user.id },
-      select: { 
+      select: {
         id: true,
-        familyId: true 
+        familyId: true
       }
     });
 
@@ -32,9 +34,9 @@ router.get('/', authenticate, async (req, res) => {
     console.log(`Fetching tasks for user ${user.id}${user.familyId ? ' in family ' + user.familyId : ' (personal tasks only)'}`);
 
     console.log(`Fetching tasks for user ${user.id} in family ${user.familyId}`);
-    
+
     // Query tasks: user's personal tasks + family tasks (if in a family)
-    const whereClause = user.familyId 
+    const whereClause = user.familyId
       ? {
           OR: [
             { familyId: user.familyId },
@@ -106,7 +108,7 @@ router.get('/:id', authenticate, async (req, res) => {
 });
 
 
-router.post('/', 
+router.post('/',
   authenticate,
   validateRequest({
     title: 'required|string|min:2|max:255',
@@ -119,13 +121,13 @@ router.post('/',
   async (req, res) => {
     try {
       const { title, description, dueDate, priority, repeatFrequency, categoryId } = req.body;
-      
+
       // Get user's family ID
       const user = await prisma.user.findUnique({
         where: { id: req.user.id },
-        select: { 
+        select: {
           id: true,
-          familyId: true 
+          familyId: true
         }
       });
 
@@ -140,9 +142,9 @@ router.post('/',
         const category = await prisma.category.findUnique({
           where: { id: categoryId }
         });
-        
+
         if (!category) {
-          return res.status(404).json({ 
+          return res.status(404).json({
             error: 'Category not found',
             details: `No category found with ID: ${categoryId}`
           });
@@ -182,7 +184,7 @@ router.post('/',
       });
     } catch (error) {
       console.error('Error creating task:', error);
-      
+
       // Handle specific Prisma errors
       if (error.code === 'P2025') {
         return res.status(404).json({
@@ -190,8 +192,8 @@ router.post('/',
           details: error.meta?.cause || 'A related record required for this operation was not found'
         });
       }
-      
-      res.status(500).json({ 
+
+      res.status(500).json({
         error: 'Failed to create task',
         details: process.env.NODE_ENV === 'development' ? error.message : undefined
       });
@@ -200,7 +202,7 @@ router.post('/',
 );
 
 
-router.put('/:id', 
+router.put('/:id',
   authenticate,
   validateRequest({
     title: 'string|min:2|max:255',
@@ -241,9 +243,9 @@ router.put('/:id',
         data: {
           ...(title && { title }),
           ...(description !== undefined && { description }),
-          ...(completed !== undefined && { 
+          ...(completed !== undefined && {
             completed,
-            completedAt: completed ? new Date() : null 
+            completedAt: completed ? new Date() : null
           }),
           ...(dueDate && { dueDate: new Date(dueDate) }),
           ...(priority && { priority }),
