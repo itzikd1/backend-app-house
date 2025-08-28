@@ -23,10 +23,7 @@
  *         content:
  *           application/json:
  *             schema:
- *               type: object
- *               properties:
- *                 data:
- *                   $ref: '#/components/schemas/Note'
+ *               $ref: '#/components/schemas/Note'
  *   get:
  *     summary: Get all notes
  *     tags: [Note]
@@ -36,12 +33,9 @@
  *         content:
  *           application/json:
  *             schema:
- *               type: object
- *               properties:
- *                 data:
- *                   type: array
- *                   items:
- *                     $ref: '#/components/schemas/Note'
+ *               type: array
+ *               items:
+ *                 $ref: '#/components/schemas/Note'
  * /api/note/{id}:
  *   get:
  *     summary: Get note by ID
@@ -58,10 +52,7 @@
  *         content:
  *           application/json:
  *             schema:
- *               type: object
- *               properties:
- *                 data:
- *                   $ref: '#/components/schemas/Note'
+ *               $ref: '#/components/schemas/Note'
  *   put:
  *     summary: Update note
  *     tags: [Note]
@@ -83,10 +74,7 @@
  *         content:
  *           application/json:
  *             schema:
- *               type: object
- *               properties:
- *                 data:
- *                   $ref: '#/components/schemas/Note'
+ *               $ref: '#/components/schemas/Note'
  *   delete:
  *     summary: Delete note
  *     tags: [Note]
@@ -97,19 +85,8 @@
  *         schema:
  *           type: string
  *     responses:
- *       200:
+ *       204:
  *         description: Note deleted
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                 data:
- *                   type: object
- *                   properties:
- *                     success:
- *                       type: boolean
- *                       example: true
  */
 
 /**

@@ -13,7 +13,7 @@ exports.getTasks = async (req, res) => {
     if (req.query.status) {
       tasks = tasks.filter(task => task.status === req.query.status);
     }
-    res.json({ data: tasks });
+    res.json(tasks);
   } catch (error) {
     res.status(500).json({ error: 'Failed to fetch tasks' });
   }
@@ -28,7 +28,7 @@ exports.getTaskById = async (req, res) => {
     if (result === 'forbidden') {
       return res.status(403).json({ error: 'Not authorized to access this task' });
     }
-    res.json({ data: result });
+    res.json(result);
   } catch (error) {
     res.status(500).json({ error: 'Failed to fetch task' });
   }
@@ -38,9 +38,9 @@ exports.createTask = async (req, res) => {
   try {
     const result = await taskService.createTask(req.user.id, req.body);
     if (result.error) {
-      return res.status(400).json({ error: result.error });
+      return res.status(400).json(result);
     }
-    res.status(201).json({ data: result });
+    res.status(201).json(result);
   } catch (error) {
     if (error.code === 'P2025') {
       return res.status(404).json({
@@ -57,11 +57,11 @@ exports.updateTask = async (req, res) => {
     const result = await taskService.updateTask(req.params.id, req.user.id, req.body);
     if (result.error) {
       if (result.error === 'Task not found') {
-        return res.status(404).json({ error: result.error });
+        return res.status(404).json(result);
       }
-      return res.status(400).json({ error: result.error });
+      return res.status(403).json(result);
     }
-    res.json({ data: result });
+    res.json(result);
   } catch (error) {
     res.status(500).json({ error: 'Failed to update task' });
   }
@@ -70,13 +70,13 @@ exports.updateTask = async (req, res) => {
 exports.deleteTask = async (req, res) => {
   try {
     const result = await taskService.deleteTask(req.params.id, req.user.id);
-    if (result === null) {
-      return res.status(404).json({ error: 'Task not found' });
+    if (result.error) {
+      if (result.error === 'Task not found') {
+        return res.status(404).json(result);
+      }
+      return res.status(403).json(result);
     }
-    if (result === 'forbidden') {
-      return res.status(403).json({ error: 'Not authorized to delete this task' });
-    }
-    res.json({ data: { success: true } });
+    res.json(result);
   } catch (error) {
     res.status(500).json({ error: 'Failed to delete task' });
   }

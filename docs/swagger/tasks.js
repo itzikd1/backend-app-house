@@ -140,23 +140,29 @@
  * @swagger
  * /api/tasks:
  *   get:
- *     summary: Get all tasks
+ *     summary: Get all tasks for the current user's family
  *     tags: [Tasks]
+ *     security:
+ *       - bearerAuth: []
  *     responses:
  *       200:
  *         description: List of tasks
  *         content:
  *           application/json:
  *             schema:
- *               type: object
- *               properties:
- *                 data:
- *                   type: array
- *                   items:
- *                     $ref: '#/components/schemas/Task'
+ *               type: array
+ *               items:
+ *                 $ref: '#/components/schemas/Task'
+ *       400:
+ *         description: User is not part of a family
+ *       500:
+ *         description: Failed to fetch tasks
+ *
  *   post:
  *     summary: Create a new task
  *     tags: [Tasks]
+ *     security:
+ *       - bearerAuth: []
  *     requestBody:
  *       required: true
  *       content:
@@ -165,44 +171,62 @@
  *             $ref: '#/components/schemas/TaskInput'
  *     responses:
  *       201:
- *         description: Task created
+ *         description: Task created successfully
  *         content:
  *           application/json:
  *             schema:
- *               type: object
- *               properties:
- *                 data:
- *                   $ref: '#/components/schemas/Task'
- *
+ *               $ref: '#/components/schemas/Task'
+ *       400:
+ *         description: Invalid input or user not part of a family
+ *       500:
+ *         description: Failed to create task
+ */
+
+/**
+ * @swagger
  * /api/tasks/{id}:
  *   get:
- *     summary: Get task by ID
+ *     summary: Get a single task by ID
  *     tags: [Tasks]
+ *     security:
+ *       - bearerAuth: []
  *     parameters:
  *       - in: path
  *         name: id
  *         required: true
  *         schema:
  *           type: string
+ *           pattern: '^[a-z0-9]{24}$'
+ *           example: "cmeti79jt0002ul0saico49fl"
+ *         description: Task ID (24-character alphanumeric)
  *     responses:
  *       200:
- *         description: Task found
+ *         description: Task details
  *         content:
  *           application/json:
  *             schema:
- *               type: object
- *               properties:
- *                 data:
- *                   $ref: '#/components/schemas/Task'
+ *               $ref: '#/components/schemas/Task'
+ *       403:
+ *         description: Not authorized to access this task
+ *       404:
+ *         description: Task not found
+ *       500:
+ *         description: Failed to fetch task
+ *
  *   put:
- *     summary: Update task
+ *     summary: Update a task
  *     tags: [Tasks]
+ *     security:
+ *       - bearerAuth: []
  *     parameters:
  *       - in: path
  *         name: id
  *         required: true
  *         schema:
  *           type: string
+ *           pattern: '^[a-z0-9]{24}$'
+ *           example: "cmeti79jt0002ul0saico49fl"
+ *         description: Task ID (24-character alphanumeric)
  *     requestBody:
  *       required: true
  *       content:
@@ -211,35 +235,39 @@
  *             $ref: '#/components/schemas/TaskInput'
  *     responses:
  *       200:
- *         description: Task updated
+ *         description: Task updated successfully
  *         content:
  *           application/json:
  *             schema:
- *               type: object
- *               properties:
- *                 data:
- *                   $ref: '#/components/schemas/Task'
+ *               $ref: '#/components/schemas/Task'
+ *       403:
+ *         description: Not authorized to update this task
+ *       404:
+ *         description: Task not found
+ *       500:
+ *         description: Failed to update task
+ *
  *   delete:
- *     summary: Delete task
+ *     summary: Delete a task
  *     tags: [Tasks]
+ *     security:
+ *       - bearerAuth: []
  *     parameters:
  *       - in: path
  *         name: id
  *         required: true
  *         schema:
  *           type: string
+ *           pattern: '^[a-z0-9]{24}$'
+ *           example: "cmeti79jt0002ul0saico49fl"
+ *         description: Task ID (24-character alphanumeric)
  *     responses:
- *       200:
- *         description: Task deleted
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                 data:
- *                   type: object
- *                   properties:
- *                     success:
- *                       type: boolean
- *                       example: true
+ *       204:
+ *         description: Task deleted successfully
+ *       403:
+ *         description: Not authorized to delete this task
+ *       404:
+ *         description: Task not found
+ *       500:
+ *         description: Failed to delete task
  */

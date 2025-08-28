@@ -9,7 +9,7 @@ exports.getAllNotes = async (req, res) => {
     }
     // Remove sensitive fields
     notes = notes.map(({ secret, ...rest }) => rest);
-    res.json({ data: notes });
+    res.json(notes);
   } catch (error) {
     res.status(500).json({ error: 'Failed to fetch notes' });
   }
@@ -23,7 +23,7 @@ exports.getNoteById = async (req, res) => {
     }
     // Remove sensitive fields
     const { secret, ...safeNote } = note;
-    res.json({ data: safeNote });
+    res.json(safeNote);
   } catch (error) {
     res.status(500).json({ error: 'Failed to fetch note' });
   }
@@ -56,7 +56,7 @@ exports.deleteNote = async (req, res) => {
     if (!result) {
       return res.status(404).json({ error: 'Note not found' });
     }
-    res.json({ data: { success: true } });
+    res.json({ success: true });
   } catch (error) {
     res.status(500).json({ error: 'Failed to delete note' });
   }
