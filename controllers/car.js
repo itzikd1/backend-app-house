@@ -48,9 +48,8 @@ exports.deleteCar = async (req, res) => {
     if (!result) {
       return res.status(404).json({ error: 'Car not found' });
     }
-    res.json({ success: true });
+    res.json({ data: { success: true } });
   } catch (error) {
     res.status(500).json({ error: 'Failed to delete car' });
   }
 };
-

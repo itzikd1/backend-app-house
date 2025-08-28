@@ -226,9 +226,11 @@ describe('noteController', () => {
         { id: 'note2', content: 'Other note', taskId: 'task2' },
       ]);
       await noteController.getAllNotes(req, res);
-      expect(res.json).toHaveBeenCalledWith([
-        { id: 'note1', content: 'Test note', taskId: 'task1' }
-      ]);
+      expect(res.json).toHaveBeenCalledWith({
+        data: [
+          { id: 'note1', content: 'Test note', taskId: 'task1' }
+        ]
+      });
     });
   });
 });

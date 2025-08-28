@@ -232,9 +232,11 @@ describe('tasksController', () => {
         { id: 'task2', title: 'Done', status: 'completed' },
       ]);
       await tasksController.getTasks(req, res);
-      expect(res.json).toHaveBeenCalledWith([
-        { id: 'task2', title: 'Done', status: 'completed' }
-      ]);
+      expect(res.json).toHaveBeenCalledWith({
+        data: [
+          { id: 'task2', title: 'Done', status: 'completed' }
+        ]
+      });
     });
   });
 });
