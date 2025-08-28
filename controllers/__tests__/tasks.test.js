@@ -27,29 +27,26 @@ describe('tasksController', () => {
 
   describe('createTask', () => {
     it('should create a task with valid data', async () => {
-      // Mock service or DB as needed
-      // Assume tasksController.createTask calls a service and returns created task
       const req = mockReq({ title: 'Test Task', description: 'Do something' });
       const res = mockRes();
-      // Mock implementation
       tasksController.createTask = async (req, res) => {
-        res.status(201).json({ id: 'task1', title: req.body.title });
+        res.status(201).json({ data: { success: true, task: { id: 'task1', title: req.body.title } } });
       };
       await tasksController.createTask(req, res);
       expect(res.status).toHaveBeenCalledWith(201);
-      expect(res.json).toHaveBeenCalledWith({ id: 'task1', title: 'Test Task' });
+      expect(res.json).toHaveBeenCalledWith({ data: { success: true, task: { id: 'task1', title: 'Test Task' } } });
     });
     it('should return 400 if required fields are missing', async () => {
       const req = mockReq({ description: 'Missing title' });
       const res = mockRes();
       tasksController.createTask = async (req, res) => {
         if (!req.body.title) {
-          return res.status(400).json({ error: 'Missing required fields' });
+          return res.status(400).json({ data: { success: false, error: 'Missing required fields' } });
         }
       };
       await tasksController.createTask(req, res);
       expect(res.status).toHaveBeenCalledWith(400);
-      expect(res.json).toHaveBeenCalledWith({ error: 'Missing required fields' });
+      expect(res.json).toHaveBeenCalledWith({ data: { success: false, error: 'Missing required fields' } });
     });
   });
 
@@ -59,22 +56,22 @@ describe('tasksController', () => {
       const res = mockRes();
       tasksController.getTaskById = async (req, res) => {
         if (req.params.id === 'task1') {
-          return res.json({ id: 'task1', title: 'Test Task' });
+          return res.json({ data: { success: true, task: { id: 'task1', title: 'Test Task' } } });
         }
-        res.status(404).json({ error: 'Task not found' });
+        res.status(404).json({ data: { success: false, error: 'Task not found' } });
       };
       await tasksController.getTaskById(req, res);
-      expect(res.json).toHaveBeenCalledWith({ id: 'task1', title: 'Test Task' });
+      expect(res.json).toHaveBeenCalledWith({ data: { success: true, task: { id: 'task1', title: 'Test Task' } } });
     });
     it('should return 404 if task not found', async () => {
       const req = mockReq({}, { id: 'notfound' });
       const res = mockRes();
       tasksController.getTaskById = async (req, res) => {
-        res.status(404).json({ error: 'Task not found' });
+        res.status(404).json({ data: { success: false, error: 'Task not found' } });
       };
       await tasksController.getTaskById(req, res);
       expect(res.status).toHaveBeenCalledWith(404);
-      expect(res.json).toHaveBeenCalledWith({ error: 'Task not found' });
+      expect(res.json).toHaveBeenCalledWith({ data: { success: false, error: 'Task not found' } });
     });
   });
 
@@ -84,22 +81,22 @@ describe('tasksController', () => {
       const res = mockRes();
       tasksController.updateTask = async (req, res) => {
         if (req.params.id === 'task1') {
-          return res.json({ id: 'task1', title: req.body.title });
+          return res.json({ data: { success: true, task: { id: 'task1', title: req.body.title } } });
         }
-        res.status(404).json({ error: 'Task not found' });
+        res.status(404).json({ data: { success: false, error: 'Task not found' } });
       };
       await tasksController.updateTask(req, res);
-      expect(res.json).toHaveBeenCalledWith({ id: 'task1', title: 'Updated Task' });
+      expect(res.json).toHaveBeenCalledWith({ data: { success: true, task: { id: 'task1', title: 'Updated Task' } } });
     });
     it('should return 404 if task to update not found', async () => {
       const req = mockReq({ title: 'Updated Task' }, { id: 'notfound' });
       const res = mockRes();
       tasksController.updateTask = async (req, res) => {
-        res.status(404).json({ error: 'Task not found' });
+        res.status(404).json({ data: { success: false, error: 'Task not found' } });
       };
       await tasksController.updateTask(req, res);
       expect(res.status).toHaveBeenCalledWith(404);
-      expect(res.json).toHaveBeenCalledWith({ error: 'Task not found' });
+      expect(res.json).toHaveBeenCalledWith({ data: { success: false, error: 'Task not found' } });
     });
   });
 
@@ -109,22 +106,23 @@ describe('tasksController', () => {
       const res = mockRes();
       tasksController.deleteTask = async (req, res) => {
         if (req.params.id === 'task1') {
-          return res.status(204).json();
+          return res.status(200).json({ data: { success: true } });
         }
-        res.status(404).json({ error: 'Task not found' });
+        res.status(404).json({ data: { success: false, error: 'Task not found' } });
       };
       await tasksController.deleteTask(req, res);
-      expect(res.status).toHaveBeenCalledWith(204);
+      expect(res.status).toHaveBeenCalledWith(200);
+      expect(res.json).toHaveBeenCalledWith({ data: { success: true } });
     });
     it('should return 404 if task to delete not found', async () => {
       const req = mockReq({}, { id: 'notfound' });
       const res = mockRes();
       tasksController.deleteTask = async (req, res) => {
-        res.status(404).json({ error: 'Task not found' });
+        res.status(404).json({ data: { success: false, error: 'Task not found' } });
       };
       await tasksController.deleteTask(req, res);
       expect(res.status).toHaveBeenCalledWith(404);
-      expect(res.json).toHaveBeenCalledWith({ error: 'Task not found' });
+      expect(res.json).toHaveBeenCalledWith({ data: { success: false, error: 'Task not found' } });
     });
   });
 
@@ -136,12 +134,12 @@ describe('tasksController', () => {
         try {
           throw new Error('DB error');
         } catch (error) {
-          res.status(500).json({ error: 'Internal server error' });
+          res.status(500).json({ data: { success: false, error: 'Internal server error' } });
         }
       };
       await tasksController.createTask(req, res);
       expect(res.status).toHaveBeenCalledWith(500);
-      expect(res.json).toHaveBeenCalledWith({ error: 'Internal server error' });
+      expect(res.json).toHaveBeenCalledWith({ data: { success: false, error: 'Internal server error' } });
     });
   });
 
@@ -152,26 +150,26 @@ describe('tasksController', () => {
       tasksController.updateTask = async (req, res) => {
         // Simulate ownership check
         if (req.user.id !== 'user1') {
-          return res.status(403).json({ error: 'Forbidden' });
+          return res.status(403).json({ data: { success: false, error: 'Forbidden' } });
         }
         res.json({ id: 'task1', title: req.body.title });
       };
       await tasksController.updateTask(req, res);
       expect(res.status).toHaveBeenCalledWith(403);
-      expect(res.json).toHaveBeenCalledWith({ error: 'Forbidden' });
+      expect(res.json).toHaveBeenCalledWith({ data: { success: false, error: 'Forbidden' } });
     });
     it('should not allow deleting a task owned by another user', async () => {
       const req = mockReq({}, { id: 'task1' }, { id: 'user2' });
       const res = mockRes();
       tasksController.deleteTask = async (req, res) => {
         if (req.user.id !== 'user1') {
-          return res.status(403).json({ error: 'Forbidden' });
+          return res.status(403).json({ data: { success: false, error: 'Forbidden' } });
         }
         res.status(204).json();
       };
       await tasksController.deleteTask(req, res);
       expect(res.status).toHaveBeenCalledWith(403);
-      expect(res.json).toHaveBeenCalledWith({ error: 'Forbidden' });
+      expect(res.json).toHaveBeenCalledWith({ data: { success: false, error: 'Forbidden' } });
     });
   });
 
@@ -183,13 +181,13 @@ describe('tasksController', () => {
         // Simulate duplicate check
         const existingTask = req.body.title === 'Test Task' ? { id: 'task1', title: 'Test Task' } : null;
         if (existingTask) {
-          return res.status(409).json({ error: 'Task title already exists' });
+          return res.status(409).json({ data: { success: false, error: 'Task title already exists' } });
         }
         res.status(201).json({ id: 'task2', title: req.body.title });
       };
       await tasksController.createTask(req, res);
       expect(res.status).toHaveBeenCalledWith(409);
-      expect(res.json).toHaveBeenCalledWith({ error: 'Task title already exists' });
+      expect(res.json).toHaveBeenCalledWith({ data: { success: false, error: 'Task title already exists' } });
     });
   });
 
@@ -199,13 +197,13 @@ describe('tasksController', () => {
       const res = mockRes();
       tasksController.createTask = async (req, res) => {
         if (!req.body.title) {
-          return res.status(400).json({ error: 'Missing required fields' });
+          return res.status(400).json({ data: { success: false, error: 'Missing required fields' } });
         }
         res.status(201).json({ id: 'task1', title: req.body.title });
       };
       await tasksController.createTask(req, res);
       expect(res.status).toHaveBeenCalledWith(400);
-      expect(res.json).toHaveBeenCalledWith({ error: 'Missing required fields' });
+      expect(res.json).toHaveBeenCalledWith({ data: { success: false, error: 'Missing required fields' } });
     });
     it('should not allow creating a task with title exceeding max length', async () => {
       const longTitle = 'a'.repeat(256);
@@ -213,13 +211,13 @@ describe('tasksController', () => {
       const res = mockRes();
       tasksController.createTask = async (req, res) => {
         if (req.body.title.length > 255) {
-          return res.status(400).json({ error: 'Title too long' });
+          return res.status(400).json({ data: { success: false, error: 'Title too long' } });
         }
         res.status(201).json({ id: 'task1', title: req.body.title });
       };
       await tasksController.createTask(req, res);
       expect(res.status).toHaveBeenCalledWith(400);
-      expect(res.json).toHaveBeenCalledWith({ error: 'Title too long' });
+      expect(res.json).toHaveBeenCalledWith({ data: { success: false, error: 'Title too long' } });
     });
   });
 
@@ -232,9 +230,14 @@ describe('tasksController', () => {
         { id: 'task2', title: 'Done', status: 'completed' },
       ]);
       await tasksController.getTasks(req, res);
-      expect(res.json).toHaveBeenCalledWith([
-        { id: 'task2', title: 'Done', status: 'completed' }
-      ]);
+      expect(res.json).toHaveBeenCalledWith({
+        data: {
+          success: true,
+          tasks: [
+            { id: 'task2', title: 'Done', status: 'completed' }
+          ]
+        }
+      });
     });
   });
 });
