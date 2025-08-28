@@ -187,7 +187,73 @@ interface Task {
 }
 ```
 
-#### Note, Recipe, Goal, Family, CarLocationHistory
-Each has a similar structure: `id`, main fields, and references to related resources (see Swagger docs for details).
+#### Note
+```ts
+interface Note {
+  id: string;
+  title: string;
+  content: string;
+  userId: string;
+  createdAt: string; // ISO date string
+  updatedAt: string; // ISO date string
+}
+```
+
+#### Recipe
+```ts
+interface Recipe {
+  id: string;
+  title: string;
+  description?: string;
+  ingredients: string[];
+  steps: string[];
+  userId: string;
+  createdAt: string; // ISO date string
+  updatedAt: string; // ISO date string
+}
+```
+
+#### Goal
+```ts
+interface Goal {
+  id: string;
+  title: string;
+  description?: string;
+  completed: boolean;
+  userId: string;
+  createdAt: string; // ISO date string
+  updatedAt: string; // ISO date string
+}
+```
+
+#### Family
+```ts
+interface Family {
+  id: string;
+  name: string;
+  createdAt: string; // ISO date string
+  updatedAt: string; // ISO date string
+  members: FamilyMember[];
+}
+
+interface FamilyMember {
+  id: string;
+  name: string;
+  email: string;
+  role: 'ADMIN' | 'FAMILY_MEMBER' | 'GUEST';
+  joinedAt: string; // ISO date string
+}
+```
+
+#### CarLocationHistory
+```ts
+interface CarLocationHistory {
+  id: string;
+  carId: string;
+  latitude: number;
+  longitude: number;
+  timestamp: string; // ISO date string
+}
+```
 
 ---
