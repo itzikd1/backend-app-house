@@ -25,12 +25,12 @@ This is a Node.js backend application using Express, Prisma, and Swagger for API
 - Interactive Swagger docs available (when not in production).
 - Request/response schemas are defined in Swagger files (see `#/components/schemas/[Resource]`).
 
-## Running the Project
+## Setup
 1. Install dependencies:
    ```bash
    npm install
    ```
-2. Set up environment variables in a `.env` file.
+2. Copy `.env.example` to `.env` and fill in required values (DB, JWT, etc).
 3. Run database migrations (if needed):
    ```bash
    npx prisma migrate deploy
@@ -47,16 +47,182 @@ This is a Node.js backend application using Express, Prisma, and Swagger for API
    ```bash
    npm test
    ```
+- Test API routes:
+   ```bash
+   ./test_api.sh
+   ```
 
-## Conventions
-- Use single quotes, 2-space indentation, and semicolons.
-- Prefer `const`/`let`, strict equality, and async/await.
-- Always handle errors and validate input.
-- Document new endpoints in Swagger.
-- Add tests for all new features.
+## Authentication
+Most endpoints require authentication. Include the JWT token in the Authorization header:
+```
+Authorization: Bearer <your_jwt_token>
+```
 
-## Contact
-For questions or contributions, please refer to the project maintainers.
+## Error Responses
+Common error status codes:
+- `400` - Bad Request: Invalid request data
+- `401` - Unauthorized: Authentication required
+- `403` - Forbidden: Not enough permissions
+- `404` - Not Found: Resource not found
+- `500` - Internal Server Error: Something went wrong on the server
+
+## API Response Format
+All endpoints return `{ data: ... }` for success and `{ error: ... }` for errors.
+
+### TypeScript Response Types
+```typescript
+interface ApiResponse<T> {
+  data?: T;
+  error?: string;
+  message?: string;
+}
+
+interface ApiError {
+  status: number;
+  message: string;
+  errors?: Record<string, string[]>;
+  timestamp: string;
+  path: string;
+}
+```
+
+## Main Interfaces (Resource Schemas)
+Below are examples of the main data interfaces for each resource:
+
+### Common Types
+```typescript
+interface BaseModel {
+  id: string;
+  createdAt: string; // ISO date string
+  updatedAt: string; // ISO date string
+  createdBy?: string;
+}
+```
+
+### User
+```typescript
+interface User extends BaseModel {
+  name: string;
+  email: string;
+  role: 'ADMIN' | 'FAMILY_HEAD' | 'FAMILY_MEMBER';
+  familyId?: string;
+}
+```
+
+### Task
+```typescript
+interface Task extends BaseModel {
+  title: string;
+  description?: string;
+  completed: boolean;
+  dueDate?: string; // ISO date string
+  priority: 'Low' | 'Medium' | 'High';
+  repeatFrequency?: string;
+  categoryId?: string;
+  userId: string;
+}
+
+interface Category extends BaseModel {
+  name: string;
+  color?: string;
+  icon?: string;
+}
+```
+
+### Family
+```typescript
+interface Family extends BaseModel {
+  name: string;
+  members: User[];
+  createdById: string;
+}
+
+interface FamilyInvite {
+  id: string;
+  email: string;
+  familyId: string;
+  status: 'PENDING' | 'ACCEPTED' | 'REJECTED';
+  expiresAt: string; // ISO date string
+  createdById: string;
+}
+```
+
+### Vehicle
+```typescript
+interface Car extends BaseModel {
+  make: string;
+  model: string;
+  year: number;
+  licensePlate: string;
+  userId: string;
+  currentLocation?: Location;
+}
+
+interface CarLocationHistory extends BaseModel {
+  carId: string;
+  location: Location;
+  timestamp: string; // ISO date string
+}
+
+interface Location {
+  lat: number;
+  lng: number;
+  address?: string;
+  timestamp: string; // ISO date string
+}
+```
+
+### Recipe
+```typescript
+interface Recipe extends BaseModel {
+  title: string;
+  description?: string;
+  ingredients: Ingredient[];
+  instructions: string[];
+  prepTime?: number; // in minutes
+  cookTime?: number; // in minutes
+  servings?: number;
+  tags?: string[];
+  createdById: string;
+}
+
+interface Ingredient {
+  name: string;
+  amount: number;
+  unit: string;
+  notes?: string;
+}
+```
+
+### Goal
+```typescript
+interface Goal extends BaseModel {
+  title: string;
+  description?: string;
+  targetDate?: string; // ISO date string
+  completed: boolean;
+  progress: number; // 0-100
+  category?: string;
+  userId: string;
+}
+```
+
+### Note
+```typescript
+interface Note extends BaseModel {
+  title: string;
+  content: string;
+  tags?: string[];
+  isPinned: boolean;
+  userId: string;
+}
+```
+
+
+
+
+
+
 
 ## Existing Routes & Interfaces
 
@@ -147,113 +313,3 @@ All API responses follow this structure:
 
 ---
 
-### Main Interfaces (Resource Schemas)
-Below are examples of the main data interfaces for each resource:
-
-#### Car
-```ts
-interface Car {
-  id: string;
-  make: string;
-  model: string;
-  year?: number;
-  licensePlate: string;
-  userId: string;
-  familyId?: string;
-}
-```
-
-#### User
-```ts
-interface User {
-  id: string;
-  name: string;
-  email: string;
-  // ...other fields
-}
-```
-
-#### Task
-```ts
-interface Task {
-  id: string;
-  title: string;
-  description?: string;
-  dueDate?: string;
-  priority?: 'Low' | 'Medium' | 'High';
-  completed?: boolean;
-  repeatFrequency?: string;
-  categoryId?: string;
-}
-```
-
-#### Note
-```ts
-interface Note {
-  id: string;
-  title: string;
-  content: string;
-  userId: string;
-  createdAt: string; // ISO date string
-  updatedAt: string; // ISO date string
-}
-```
-
-#### Recipe
-```ts
-interface Recipe {
-  id: string;
-  title: string;
-  description?: string;
-  ingredients: string[];
-  steps: string[];
-  userId: string;
-  createdAt: string; // ISO date string
-  updatedAt: string; // ISO date string
-}
-```
-
-#### Goal
-```ts
-interface Goal {
-  id: string;
-  title: string;
-  description?: string;
-  completed: boolean;
-  userId: string;
-  createdAt: string; // ISO date string
-  updatedAt: string; // ISO date string
-}
-```
-
-#### Family
-```ts
-interface Family {
-  id: string;
-  name: string;
-  createdAt: string; // ISO date string
-  updatedAt: string; // ISO date string
-  members: FamilyMember[];
-}
-
-interface FamilyMember {
-  id: string;
-  name: string;
-  email: string;
-  role: 'ADMIN' | 'FAMILY_MEMBER' | 'GUEST';
-  joinedAt: string; // ISO date string
-}
-```
-
-#### CarLocationHistory
-```ts
-interface CarLocationHistory {
-  id: string;
-  carId: string;
-  latitude: number;
-  longitude: number;
-  timestamp: string; // ISO date string
-}
-```
-
----
