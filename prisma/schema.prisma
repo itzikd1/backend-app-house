@@ -10,6 +10,7 @@ datasource db {
 enum UserRole {
   ADMIN
   FAMILY_MEMBER
+  USER
   GUEST
 }
 
@@ -226,8 +227,8 @@ model CarLocationHistory {
 model Recipe {
   id           String   @id @default(cuid())
   title        String
-  ingredients  String[]
-  instructions String
+  ingredients  Json
+  instructions Json
   userId       String
   user         User     @relation("UserRecipes", fields: [userId], references: [id])
   familyId     String?

@@ -32,6 +32,9 @@ const carLocationHistoryRoute = require('./routes/carLocationHistory');
 const noteRoute = require('./routes/note');
 const recipeRoute = require('./routes/recipe');
 const goalRoute = require('./routes/goal');
+const shoppingCategoryRoute = require('./routes/shoppingCategory');
+const savedShoppingListRoute = require('./routes/savedShoppingList');
+const taskCategoryRoute = require('./routes/taskCategory');
 
 // API Documentation - Swagger UI
 if (process.env.NODE_ENV !== 'production') {
@@ -49,6 +52,9 @@ app.use('/api/car-location-history', carLocationHistoryRoute);
 app.use('/api/note', noteRoute);
 app.use('/api/recipe', recipeRoute);
 app.use('/api/goal', goalRoute);
+app.use('/api/shopping-category', shoppingCategoryRoute);
+app.use('/api/saved-shopping-list', savedShoppingListRoute);
+app.use('/api/task-category', taskCategoryRoute);
 
 // Serve static files from the 'public' directory
 app.use(express.static(path.join(__dirname, 'public')));

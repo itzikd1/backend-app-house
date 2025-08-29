@@ -1,0 +1,809 @@
+{
+  "info": {
+    "_postman_id": "b366efcc-be80-4590-94c0-25ae994071cc",
+    "name": "Backend App House",
+    "description": "Postman collection for Backend App House API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "Auth",
+      "item": [
+        {
+          "name": "Register User",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"John Doe\",\n  \"email\": \"john@example.com\",\n  \"password\": \"password123\"\n}"
+            },
+            "url": { "raw": "{{baseUrl}}/api/auth/register", "host": ["{{baseUrl}}"], "path": ["api", "auth", "register"] }
+          }
+        },
+        {
+          "name": "Login User",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"john@example.com\",\n  \"password\": \"password123\"\n}"
+            },
+            "url": { "raw": "{{baseUrl}}/api/auth/login", "host": ["{{baseUrl}}"], "path": ["api", "auth", "login"] }
+          }
+        },
+        {
+          "name": "Get Current User",
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{token}}" }
+            ],
+            "url": { "raw": "{{baseUrl}}/api/auth/me", "host": ["{{baseUrl}}"], "path": ["api", "auth", "me"] }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Users",
+      "item": [
+        {
+          "name": "Get All Users",
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{token}}" }
+            ],
+            "url": { "raw": "{{baseUrl}}/api/users", "host": ["{{baseUrl}}"], "path": ["api", "users"] }
+          }
+        },
+        {
+          "name": "Create User",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Jane Doe\",\n  \"email\": \"jane@example.com\",\n  \"password\": \"password123\"\n}"
+            },
+            "url": { "raw": "{{baseUrl}}/api/users", "host": ["{{baseUrl}}"], "path": ["api", "users"] }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Tasks",
+      "item": [
+        {
+          "name": "Get All Tasks",
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{token}}" }
+            ],
+            "url": { "raw": "{{baseUrl}}/api/tasks", "host": ["{{baseUrl}}"], "path": ["api", "tasks"] }
+          }
+        },
+        {
+          "name": "Get Task By ID",
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{token}}" }
+            ],
+            "url": { "raw": "{{baseUrl}}/api/tasks/:id", "host": ["{{baseUrl}}"], "path": ["api", "tasks", ":id"] }
+          }
+        },
+        {
+          "name": "Create Task",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{token}}" },
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"title\": \"Buy groceries\",\n  \"description\": \"Milk, eggs, bread\",\n  \"priority\": \"Medium\"\n}"
+            },
+            "url": { "raw": "{{baseUrl}}/api/tasks", "host": ["{{baseUrl}}"], "path": ["api", "tasks"] }
+          }
+        },
+        {
+          "name": "Update Task",
+          "request": {
+            "method": "PUT",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{token}}" },
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"title\": \"Buy groceries and snacks\",\n  \"priority\": \"High\"\n}"
+            },
+            "url": { "raw": "{{baseUrl}}/api/tasks/:id", "host": ["{{baseUrl}}"], "path": ["api", "tasks", ":id"] }
+          }
+        },
+        {
+          "name": "Delete Task",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{token}}" }
+            ],
+            "url": { "raw": "{{baseUrl}}/api/tasks/:id", "host": ["{{baseUrl}}"], "path": ["api", "tasks", ":id"] }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Notes",
+      "item": [
+        {
+          "name": "Get All Notes",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+            "url": { "raw": "{{baseUrl}}/api/note", "host": ["{{baseUrl}}"], "path": ["api", "note"] }
+          }
+        },
+        {
+          "name": "Get Note By ID",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+            "url": { "raw": "{{baseUrl}}/api/note/:id", "host": ["{{baseUrl}}"], "path": ["api", "note", ":id"] }
+          }
+        },
+        {
+          "name": "Create Note",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{token}}" },
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"title\": \"Shopping List\",\n  \"content\": \"Buy milk and eggs\",\n  \"isPinned\": false\n}"
+            },
+            "url": { "raw": "{{baseUrl}}/api/note", "host": ["{{baseUrl}}"], "path": ["api", "note"] }
+          }
+        },
+        {
+          "name": "Update Note",
+          "request": {
+            "method": "PUT",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{token}}" },
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"title\": \"Updated Shopping List\",\n  \"isPinned\": true\n}"
+            },
+            "url": { "raw": "{{baseUrl}}/api/note/:id", "host": ["{{baseUrl}}"], "path": ["api", "note", ":id"] }
+          }
+        },
+        {
+          "name": "Delete Note",
+          "request": {
+            "method": "DELETE",
+            "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+            "url": { "raw": "{{baseUrl}}/api/note/:id", "host": ["{{baseUrl}}"], "path": ["api", "note", ":id"] }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Task Category",
+      "item": [
+        {
+          "name": "Get All Task Categories",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+            "url": { "raw": "{{baseUrl}}/api/task-category", "host": ["{{baseUrl}}"], "path": ["api", "task-category"] }
+          }
+        },
+        {
+          "name": "Create Task Category",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{token}}" },
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Work\"\n}"
+            },
+            "url": { "raw": "{{baseUrl}}/api/task-category", "host": ["{{baseUrl}}"], "path": ["api", "task-category"] }
+          }
+        },
+        {
+          "name": "Update Task Category",
+          "request": {
+            "method": "PUT",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{token}}" },
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Personal\"\n}"
+            },
+            "url": { "raw": "{{baseUrl}}/api/task-category/:id", "host": ["{{baseUrl}}"], "path": ["api", "task-category", ":id"] }
+          }
+        },
+        {
+          "name": "Delete Task Category",
+          "request": {
+            "method": "DELETE",
+            "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+            "url": { "raw": "{{baseUrl}}/api/task-category/:id", "host": ["{{baseUrl}}"], "path": ["api", "task-category", ":id"] }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Shopping Category",
+      "item": [
+        {
+          "name": "Get All Shopping Categories",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+            "url": { "raw": "{{baseUrl}}/api/shopping-category", "host": ["{{baseUrl}}"], "path": ["api", "shopping-category"] }
+          }
+        },
+        {
+          "name": "Create Shopping Category",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{token}}" },
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Groceries\"\n}"
+            },
+            "url": { "raw": "{{baseUrl}}/api/shopping-category", "host": ["{{baseUrl}}"], "path": ["api", "shopping-category"] }
+          }
+        },
+        {
+          "name": "Update Shopping Category",
+          "request": {
+            "method": "PUT",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{token}}" },
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Supermarket\"\n}"
+            },
+            "url": { "raw": "{{baseUrl}}/api/shopping-category/:id", "host": ["{{baseUrl}}"], "path": ["api", "shopping-category", ":id"] }
+          }
+        },
+        {
+          "name": "Delete Shopping Category",
+          "request": {
+            "method": "DELETE",
+            "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+            "url": { "raw": "{{baseUrl}}/api/shopping-category/:id", "host": ["{{baseUrl}}"], "path": ["api", "shopping-category", ":id"] }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Shopping List",
+      "item": [
+        {
+          "name": "Get All Shopping Lists",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+            "url": { "raw": "{{baseUrl}}/api/shopping-list", "host": ["{{baseUrl}}"], "path": ["api", "shopping-list"] }
+          }
+        },
+        {
+          "name": "Create Shopping List",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{token}}" },
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Weekly Groceries\"\n}"
+            },
+            "url": { "raw": "{{baseUrl}}/api/shopping-list", "host": ["{{baseUrl}}"], "path": ["api", "shopping-list"] }
+          }
+        },
+        {
+          "name": "Get Shopping List By ID",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+            "url": { "raw": "{{baseUrl}}/api/shopping-list/:id", "host": ["{{baseUrl}}"], "path": ["api", "shopping-list", ":id"] }
+          }
+        },
+        {
+          "name": "Update Shopping List",
+          "request": {
+            "method": "PUT",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{token}}" },
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Updated Groceries\"\n}"
+            },
+            "url": { "raw": "{{baseUrl}}/api/shopping-list/:id", "host": ["{{baseUrl}}"], "path": ["api", "shopping-list", ":id"] }
+          }
+        },
+        {
+          "name": "Delete Shopping List",
+          "request": {
+            "method": "DELETE",
+            "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+            "url": { "raw": "{{baseUrl}}/api/shopping-list/:id", "host": ["{{baseUrl}}"], "path": ["api", "shopping-list", ":id"] }
+          }
+        },
+        {
+          "name": "Add Item to Shopping List",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{token}}" },
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Milk\",\n  \"quantity\": 2\n}"
+            },
+            "url": { "raw": "{{baseUrl}}/api/shopping-list/:id/items", "host": ["{{baseUrl}}"], "path": ["api", "shopping-list", ":id", "items"] }
+          }
+        },
+        {
+          "name": "Update Shopping List Item",
+          "request": {
+            "method": "PUT",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{token}}" },
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Milk\",\n  \"quantity\": 3\n}"
+            },
+            "url": { "raw": "{{baseUrl}}/api/shopping-list/items/:itemId", "host": ["{{baseUrl}}"], "path": ["api", "shopping-list", "items", ":itemId"] }
+          }
+        },
+        {
+          "name": "Delete Shopping List Item",
+          "request": {
+            "method": "DELETE",
+            "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+            "url": { "raw": "{{baseUrl}}/api/shopping-list/items/:itemId", "host": ["{{baseUrl}}"], "path": ["api", "shopping-list", "items", ":itemId"] }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Saved Shopping List",
+      "item": [
+        {
+          "name": "Get All Saved Shopping Lists",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+            "url": { "raw": "{{baseUrl}}/api/saved-shopping-list", "host": ["{{baseUrl}}"], "path": ["api", "saved-shopping-list"] }
+          }
+        },
+        {
+          "name": "Create Saved Shopping List",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{token}}" },
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Party Supplies\"\n}"
+            },
+            "url": { "raw": "{{baseUrl}}/api/saved-shopping-list", "host": ["{{baseUrl}}"], "path": ["api", "saved-shopping-list"] }
+          }
+        },
+        {
+          "name": "Get Saved Shopping List By ID",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+            "url": { "raw": "{{baseUrl}}/api/saved-shopping-list/:id", "host": ["{{baseUrl}}"], "path": ["api", "saved-shopping-list", ":id"] }
+          }
+        },
+        {
+          "name": "Update Saved Shopping List",
+          "request": {
+            "method": "PUT",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{token}}" },
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Updated Party Supplies\"\n}"
+            },
+            "url": { "raw": "{{baseUrl}}/api/saved-shopping-list/:id", "host": ["{{baseUrl}}"], "path": ["api", "saved-shopping-list", ":id"] }
+          }
+        },
+        {
+          "name": "Delete Saved Shopping List",
+          "request": {
+            "method": "DELETE",
+            "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+            "url": { "raw": "{{baseUrl}}/api/saved-shopping-list/:id", "host": ["{{baseUrl}}"], "path": ["api", "saved-shopping-list", ":id"] }
+          }
+        },
+        {
+          "name": "Get Items in Saved Shopping List",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+            "url": { "raw": "{{baseUrl}}/api/saved-shopping-list/:id/items", "host": ["{{baseUrl}}"], "path": ["api", "saved-shopping-list", ":id", "items"] }
+          }
+        },
+        {
+          "name": "Add Item to Saved Shopping List",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{token}}" },
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Cups\",\n  \"quantity\": 20\n}"
+            },
+            "url": { "raw": "{{baseUrl}}/api/saved-shopping-list/:id/items", "host": ["{{baseUrl}}"], "path": ["api", "saved-shopping-list", ":id", "items"] }
+          }
+        },
+        {
+          "name": "Update Saved Shopping List Item",
+          "request": {
+            "method": "PUT",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{token}}" },
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Cups\",\n  \"quantity\": 25\n}"
+            },
+            "url": { "raw": "{{baseUrl}}/api/saved-shopping-list/items/:itemId", "host": ["{{baseUrl}}"], "path": ["api", "saved-shopping-list", "items", ":itemId"] }
+          }
+        },
+        {
+          "name": "Delete Saved Shopping List Item",
+          "request": {
+            "method": "DELETE",
+            "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+            "url": { "raw": "{{baseUrl}}/api/saved-shopping-list/items/:itemId", "host": ["{{baseUrl}}"], "path": ["api", "saved-shopping-list", "items", ":itemId"] }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Recipe",
+      "item": [
+        {
+          "name": "Get All Recipes",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+            "url": { "raw": "{{baseUrl}}/api/recipe", "host": ["{{baseUrl}}"], "path": ["api", "recipe"] }
+          }
+        },
+        {
+          "name": "Get Recipe By ID",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+            "url": { "raw": "{{baseUrl}}/api/recipe/:id", "host": ["{{baseUrl}}"], "path": ["api", "recipe", ":id"] }
+          }
+        },
+        {
+          "name": "Create Recipe",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{token}}" },
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"title\": \"Pancakes\",\n  \"ingredients\": [{\"name\": \"Flour\", \"amount\": 2, \"unit\": \"cups\"}],\n  \"instructions\": [\"Mix ingredients\", \"Cook on skillet\"]\n}"
+            },
+            "url": { "raw": "{{baseUrl}}/api/recipe", "host": ["{{baseUrl}}"], "path": ["api", "recipe"] }
+          }
+        },
+        {
+          "name": "Update Recipe",
+          "request": {
+            "method": "PUT",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{token}}" },
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"title\": \"Banana Pancakes\"\n}"
+            },
+            "url": { "raw": "{{baseUrl}}/api/recipe/:id", "host": ["{{baseUrl}}"], "path": ["api", "recipe", ":id"] }
+          }
+        },
+        {
+          "name": "Delete Recipe",
+          "request": {
+            "method": "DELETE",
+            "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+            "url": { "raw": "{{baseUrl}}/api/recipe/:id", "host": ["{{baseUrl}}"], "path": ["api", "recipe", ":id"] }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Car",
+      "item": [
+        {
+          "name": "Get All Cars",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+            "url": { "raw": "{{baseUrl}}/api/car", "host": ["{{baseUrl}}"], "path": ["api", "car"] }
+          }
+        },
+        {
+          "name": "Get Car By ID",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+            "url": { "raw": "{{baseUrl}}/api/car/:id", "host": ["{{baseUrl}}"], "path": ["api", "car", ":id"] }
+          }
+        },
+        {
+          "name": "Create Car",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{token}}" },
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"make\": \"Toyota\",\n  \"model\": \"Corolla\",\n  \"year\": 2020,\n  \"licensePlate\": \"123-ABC\"\n}"
+            },
+            "url": { "raw": "{{baseUrl}}/api/car", "host": ["{{baseUrl}}"], "path": ["api", "car"] }
+          }
+        },
+        {
+          "name": "Update Car",
+          "request": {
+            "method": "PUT",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{token}}" },
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"model\": \"Camry\"\n}"
+            },
+            "url": { "raw": "{{baseUrl}}/api/car/:id", "host": ["{{baseUrl}}"], "path": ["api", "car", ":id"] }
+          }
+        },
+        {
+          "name": "Delete Car",
+          "request": {
+            "method": "DELETE",
+            "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+            "url": { "raw": "{{baseUrl}}/api/car/:id", "host": ["{{baseUrl}}"], "path": ["api", "car", ":id"] }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Car Location History",
+      "item": [
+        {
+          "name": "Get All Car Location History",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+            "url": { "raw": "{{baseUrl}}/api/car-location-history", "host": ["{{baseUrl}}"], "path": ["api", "car-location-history"] }
+          }
+        },
+        {
+          "name": "Get Car Location History By ID",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+            "url": { "raw": "{{baseUrl}}/api/car-location-history/:id", "host": ["{{baseUrl}}"], "path": ["api", "car-location-history", ":id"] }
+          }
+        },
+        {
+          "name": "Create Car Location History",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{token}}" },
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"carId\": \"car-id\",\n  \"location\": {\"lat\": 32.1, \"lng\": 34.8, \"address\": \"Tel Aviv\"},\n  \"timestamp\": \"2025-08-29T10:00:00Z\"\n}"
+            },
+            "url": { "raw": "{{baseUrl}}/api/car-location-history", "host": ["{{baseUrl}}"], "path": ["api", "car-location-history"] }
+          }
+        },
+        {
+          "name": "Update Car Location History",
+          "request": {
+            "method": "PUT",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{token}}" },
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"location\": {\"lat\": 32.2, \"lng\": 34.9}\n}"
+            },
+            "url": { "raw": "{{baseUrl}}/api/car-location-history/:id", "host": ["{{baseUrl}}"], "path": ["api", "car-location-history", ":id"] }
+          }
+        },
+        {
+          "name": "Delete Car Location History",
+          "request": {
+            "method": "DELETE",
+            "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+            "url": { "raw": "{{baseUrl}}/api/car-location-history/:id", "host": ["{{baseUrl}}"], "path": ["api", "car-location-history", ":id"] }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Families",
+      "item": [
+        {
+          "name": "Create Family",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{token}}" },
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Daniely Family\"\n}"
+            },
+            "url": { "raw": "{{baseUrl}}/api/families", "host": ["{{baseUrl}}"], "path": ["api", "families"] }
+          }
+        },
+        {
+          "name": "Get Family Members",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+            "url": { "raw": "{{baseUrl}}/api/families/members", "host": ["{{baseUrl}}"], "path": ["api", "families", "members"] }
+          }
+        },
+        {
+          "name": "Remove Family Member",
+          "request": {
+            "method": "DELETE",
+            "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+            "url": { "raw": "{{baseUrl}}/api/families/members/:userId", "host": ["{{baseUrl}}"], "path": ["api", "families", "members", ":userId"] }
+          }
+        },
+        {
+          "name": "Invite User to Family",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{token}}" },
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"invitee@example.com\"\n}"
+            },
+            "url": { "raw": "{{baseUrl}}/api/families/invite", "host": ["{{baseUrl}}"], "path": ["api", "families", "invite"] }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Goal",
+      "item": [
+        {
+          "name": "Get All Goals",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+            "url": { "raw": "{{baseUrl}}/api/goal", "host": ["{{baseUrl}}"], "path": ["api", "goal"] }
+          }
+        },
+        {
+          "name": "Get Goal By ID",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+            "url": { "raw": "{{baseUrl}}/api/goal/:id", "host": ["{{baseUrl}}"], "path": ["api", "goal", ":id"] }
+          }
+        },
+        {
+          "name": "Create Goal",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{token}}" },
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"title\": \"Run 5K\",\n  \"description\": \"Train for a 5K race\",\n  \"completed\": false,\n  \"progress\": 0\n}"
+            },
+            "url": { "raw": "{{baseUrl}}/api/goal", "host": ["{{baseUrl}}"], "path": ["api", "goal"] }
+          }
+        },
+        {
+          "name": "Update Goal",
+          "request": {
+            "method": "PUT",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{token}}" },
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"progress\": 50\n}"
+            },
+            "url": { "raw": "{{baseUrl}}/api/goal/:id", "host": ["{{baseUrl}}"], "path": ["api", "goal", ":id"] }
+          }
+        },
+        {
+          "name": "Delete Goal",
+          "request": {
+            "method": "DELETE",
+            "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+            "url": { "raw": "{{baseUrl}}/api/goal/:id", "host": ["{{baseUrl}}"], "path": ["api", "goal", ":id"] }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Health",
+      "item": [
+        {
+          "name": "Health Check",
+          "request": {
+            "method": "GET",
+            "url": { "raw": "{{baseUrl}}/api/health", "host": ["{{baseUrl}}"], "path": ["api", "health"] }
+          }
+        }
+      ]
+    }
+  ]
+}

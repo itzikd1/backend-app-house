@@ -290,6 +290,29 @@ Below is a summary of all available API routes, their endpoints, and the standar
 - GET `/` — Get all users (authenticated)
 - POST `/` — Create a new user
 
+#### Task Category (`/api/task-category`)
+- GET `/` — Get all task categories (user & family)
+- POST `/` — Create a new task category
+- PUT `/:id` — Update a task category by ID
+- DELETE `/:id` — Delete a task category by ID
+
+#### Shopping Category (`/api/shopping-category`)
+- GET `/` — Get all shopping categories (user & family)
+- POST `/` — Create a new shopping category
+- PUT `/:id` — Update a shopping category by ID
+- DELETE `/:id` — Delete a shopping category by ID
+
+#### Saved Shopping List (`/api/saved-shopping-list`)
+- GET `/` — Get all saved shopping lists for current user
+- POST `/` — Create a new saved shopping list
+- GET `/:id` — Get a specific saved shopping list
+- PUT `/:id` — Update a saved shopping list
+- DELETE `/:id` — Delete a saved shopping list
+- GET `/:id/items` — Get items in a saved shopping list
+- POST `/:id/items` — Add item to a saved shopping list
+- PUT `/items/:itemId` — Update item in a saved shopping list
+- DELETE `/items/:itemId` — Delete item from a saved shopping list
+
 ---
 
 ### Standard Response Object
@@ -313,3 +336,43 @@ All API responses follow this structure:
 
 ---
 
+## Main Resources
+- `/api/users` - User management
+- `/api/tasks` - Task management
+- `/api/note` - Note management
+- `/api/car` - Car management
+- `/api/families` - Family management
+- `/api/recipe` - Recipe management
+- `/api/goal` - Goal management
+- `/api/health` - Health data
+- `/api/category` - Task categories (user & family shared)
+- `/api/shopping-category` - Shopping categories (user & family shared)
+- `/api/saved-shopping-list` - Saved shopping lists (user)
+
+## Category Sharing Logic
+- **Task Categories** and **Shopping Categories**: Each user can create their own categories. If a user is in a family, all family members see each other's categories for tasks and shopping items.
+
+## Saved Shopping Lists
+- Users can save shopping lists and manage their items. Lists are private to each user.
+- Endpoints:
+  - `GET /api/saved-shopping-list` - Get all saved lists for current user
+  - `POST /api/saved-shopping-list` - Create a new saved list
+  - `GET /api/saved-shopping-list/:id` - Get a specific saved list
+  - `PUT /api/saved-shopping-list/:id` - Update a saved list
+  - `DELETE /api/saved-shopping-list/:id` - Delete a saved list
+  - `GET /api/saved-shopping-list/:id/items` - Get items in a saved list
+  - `POST /api/saved-shopping-list/:id/items` - Add item to a saved list
+  - `PUT /api/saved-shopping-list/items/:itemId` - Update item in a saved list
+  - `DELETE /api/saved-shopping-list/items/:itemId` - Delete item from a saved list
+
+## Category Endpoints
+- **Task Categories** (`/api/category`):
+  - `GET /api/category` - Get all categories (user & family)
+  - `POST /api/category` - Create category
+  - `PUT /api/category/:id` - Update category
+  - `DELETE /api/category/:id` - Delete category
+- **Shopping Categories** (`/api/shopping-category`):
+  - `GET /api/shopping-category` - Get all categories (user & family)
+  - `POST /api/shopping-category` - Create category
+  - `PUT /api/shopping-category/:id` - Update category
+  - `DELETE /api/shopping-category/:id` - Delete category
