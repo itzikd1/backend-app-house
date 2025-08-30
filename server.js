@@ -35,6 +35,7 @@ const goalRoute = require('./routes/goal');
 const shoppingCategoryRoute = require('./routes/shoppingCategory');
 const savedShoppingListRoute = require('./routes/savedShoppingList');
 const taskCategoryRoute = require('./routes/taskCategory');
+const shoppingItemRoute = require('./routes/shoppingItem');
 
 // API Documentation - Swagger UI
 if (process.env.NODE_ENV !== 'production') {
@@ -55,6 +56,7 @@ app.use('/api/goal', goalRoute);
 app.use('/api/shopping-category', shoppingCategoryRoute);
 app.use('/api/saved-shopping-list', savedShoppingListRoute);
 app.use('/api/task-category', taskCategoryRoute);
+app.use('/api/shopping-list', shoppingItemRoute);
 
 // Serve static files from the 'public' directory
 app.use(express.static(path.join(__dirname, 'public')));
