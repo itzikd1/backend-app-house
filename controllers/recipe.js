@@ -6,11 +6,13 @@ exports.getAllRecipes = async (req, res, next) => {
     if (req.query.ingredient) {
       recipes = recipes.filter(recipe => Array.isArray(recipe.ingredients) && recipe.ingredients.includes(req.query.ingredient));
     }
-    // Ensure all fields are present
-    recipes = recipes.map(({ id, title, ingredients, instructions, userId, familyId, createdAt, updatedAt }) => ({
-      id, title, ingredients, instructions, userId, familyId, createdAt, updatedAt
+    // Map to only required fields
+    recipes = recipes.map(({ id, name, title, ingredients }) => ({
+      id,
+      name: name ?? title,
+      ingredients,
     }));
-    res.json({ data: recipes });
+    res.json(recipes);
   } catch (error) {
     next(error);
   }
