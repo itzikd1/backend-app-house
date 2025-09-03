@@ -2,14 +2,8 @@ const noteService = require('../lib/services/noteService');
 
 exports.getAllNotes = async (req, res) => {
   try {
-    let notes = await noteService.getAllNotes(req.user.id);
-    // Filter by linked task if query param exists
-    if (req.query.taskId) {
-      notes = notes.filter(note => note.taskId === req.query.taskId);
-    }
-    // Remove sensitive fields
-    notes = notes.map(({ secret, ...rest }) => rest);
-    res.json({ data: { success: true, notes } });
+    const notes = await noteService.getAllNotes(req.user.id);
+    res.json({ data: { success: true, item: notes } });
   } catch (error) {
     res.status(500).json({ data: { success: false, error: 'Failed to fetch notes' } });
   }
@@ -21,9 +15,7 @@ exports.getNoteById = async (req, res) => {
     if (!note) {
       return res.status(404).json({ data: { success: false, error: 'Note not found' } });
     }
-    // Remove sensitive fields
-    const { secret, ...safeNote } = note;
-    res.json({ data: { success: true, note: safeNote } });
+    res.json({ data: { success: true, note } });
   } catch (error) {
     res.status(500).json({ data: { success: false, error: 'Failed to fetch note' } });
   }
@@ -32,7 +24,7 @@ exports.getNoteById = async (req, res) => {
 exports.createNote = async (req, res) => {
   try {
     const note = await noteService.createNote(req.user.id, req.body);
-    res.status(201).json({ data: { success: true, note } });
+    res.status(201).json({ data: { success: true, item: note } });
   } catch (error) {
     res.status(400).json({ data: { success: false, error: error.message || 'Failed to create note' } });
   }
@@ -44,7 +36,7 @@ exports.updateNote = async (req, res) => {
     if (!note) {
       return res.status(404).json({ data: { success: false, error: 'Note not found' } });
     }
-    res.json({ data: { success: true, note } });
+    res.json({ data: { success: true, item: note } });
   } catch (error) {
     res.status(400).json({ data: { success: false, error: error.message || 'Failed to update note' } });
   }

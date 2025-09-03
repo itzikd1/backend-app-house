@@ -12,7 +12,7 @@ exports.getAllRecipes = async (req, res, next) => {
       name: name ?? title,
       ingredients,
     }));
-    res.json(recipes);
+    res.json({ data: { item: recipes , success: true }});
   } catch (error) {
     next(error);
   }
@@ -24,8 +24,7 @@ exports.getRecipeById = async (req, res, next) => {
     if (!recipe) {
       return res.status(404).json({ error: 'Recipe not found' });
     }
-    const { id, title, ingredients, instructions, userId, familyId, createdAt, updatedAt } = recipe;
-    res.json({ data: { id, title, ingredients, instructions, userId, familyId, createdAt, updatedAt } });
+    res.json({ data: {item: recipe, success: true } });
   } catch (error) {
     next(error);
   }
@@ -34,8 +33,7 @@ exports.getRecipeById = async (req, res, next) => {
 exports.createRecipe = async (req, res, next) => {
   try {
     const recipe = await recipeService.createRecipe(req.user.id, req.body);
-    const { id, title, ingredients, instructions, userId, familyId, createdAt, updatedAt } = recipe;
-    res.status(201).json({ data: { id, title, ingredients, instructions, userId, familyId, createdAt, updatedAt } });
+    res.status(201).json({ data: {item: recipe, success: true } });
   } catch (error) {
     next(error);
   }
@@ -47,8 +45,7 @@ exports.updateRecipe = async (req, res, next) => {
     if (!recipe) {
       return res.status(404).json({ error: 'Recipe not found' });
     }
-    const { id, title, ingredients, instructions, userId, familyId, createdAt, updatedAt } = recipe;
-    res.json({ data: { id, title, ingredients, instructions, userId, familyId, createdAt, updatedAt } });
+    res.json({ data: {item: recipe, success: true } });
   } catch (error) {
     next(error);
   }
@@ -57,7 +54,7 @@ exports.updateRecipe = async (req, res, next) => {
 exports.deleteRecipe = async (req, res, next) => {
   try {
     await recipeService.deleteRecipe(req.user.id, req.params.id);
-    res.json({ data: true });
+    res.json({ data: {item: true, success: true } });
   } catch (error) {
     next(error);
   }

@@ -4,7 +4,7 @@ exports.getAllLists = async (req, res, next) => {
   try {
     const userId = req.user.id;
     const lists = await savedShoppingListService.getAllLists(userId);
-    res.json({ success: true, data: lists });
+    res.json({ success: true, item: lists });
   } catch (error) {
     res.status(500).json({ success: false, error: error.message });
   }
@@ -15,7 +15,7 @@ exports.createList = async (req, res, next) => {
     const userId = req.user.id;
     const { name } = req.body;
     const list = await savedShoppingListService.createList({ name, userId });
-    res.json({ success: true, data: list });
+    res.json({ success: true, item: list });
   } catch (error) {
     res.status(400).json({ success: false, error: error.message });
   }
@@ -25,7 +25,7 @@ exports.getListById = async (req, res, next) => {
   try {
     const listId = req.params.id;
     const list = await savedShoppingListService.getListById(listId);
-    res.json({ success: true, data: list });
+    res.json({ success: true, item: list });
   } catch (error) {
     res.status(404).json({ success: false, error: error.message });
   }
@@ -36,7 +36,7 @@ exports.updateList = async (req, res, next) => {
     const listId = req.params.id;
     const { name } = req.body;
     const list = await savedShoppingListService.updateList(listId, { name });
-    res.json({ success: true, data: list });
+    res.json({ success: true, item: list });
   } catch (error) {
     res.status(400).json({ success: false, error: error.message });
   }
@@ -46,7 +46,7 @@ exports.deleteList = async (req, res, next) => {
   try {
     const listId = req.params.id;
     await savedShoppingListService.deleteList(listId);
-    res.json({ success: true, data: true });
+    res.json({ success: true, item: true });
   } catch (error) {
     res.status(400).json({ success: false, error: error.message });
   }

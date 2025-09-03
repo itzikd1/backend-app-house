@@ -13,7 +13,7 @@ exports.getTasks = async (req, res) => {
     if (req.query.status) {
       tasks = tasks.filter(task => task.status === req.query.status);
     }
-    return res.json({ data: { success: true, tasks } });
+    return res.json({ data: { success: true, item: tasks } });
   } catch (error) {
     return res.status(500).json({ data: { success: false, error: 'Failed to fetch tasks' } });
   }
@@ -28,7 +28,7 @@ exports.getTaskById = async (req, res) => {
     if (result === 'forbidden') {
       return res.status(403).json({ data: { success: false, error: 'Not authorized to access this task' } });
     }
-    return res.json({ data: { success: true, task: result } });
+    return res.json({ data: { success: true, item: result } });
   } catch (error) {
     return res.status(500).json({ data: { success: false, error: 'Failed to fetch task' } });
   }
@@ -40,7 +40,7 @@ exports.createTask = async (req, res) => {
     if (result.error) {
       return res.status(400).json({ data: { success: false, error: result.error } });
     }
-    return res.status(201).json({ data: { success: true, task: result } });
+    return res.status(201).json({ data: { success: result.success, item: result.data} });
   } catch (error) {
     if (error.code === 'P2025') {
       return res.status(404).json({
@@ -64,7 +64,7 @@ exports.updateTask = async (req, res) => {
       }
       return res.status(403).json({ data: { success: false, error: result.error } });
     }
-    return res.json({ data: { success: true, task: result } });
+    return res.json({ data: { success: true, item: result } });
   } catch (error) {
     return res.status(500).json({ data: { success: false, error: 'Failed to update task' } });
   }
@@ -79,7 +79,7 @@ exports.deleteTask = async (req, res) => {
       }
       return res.status(403).json({ data: { success: false, error: result.error } });
     }
-    return res.json({ data: { success: true, task: result } });
+    return res.json({ data: { success: result.success, message: result.message } });
   } catch (error) {
     return res.status(500).json({ data: { success: false, error: 'Failed to delete task' } });
   }

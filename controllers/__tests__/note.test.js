@@ -229,11 +229,12 @@ describe('noteController', () => {
       await noteController.getAllNotes(req, res);
       expect(res.json).toHaveBeenCalledWith({
         data: {
+          item: [
+            { id: 'note1', content: 'Test note', taskId: 'task1' },
+            { id: 'note2', content: 'Other note', taskId: 'task2' },
+          ],
           success: true,
-          notes: [
-            { id: 'note1', content: 'Test note', taskId: 'task1' }
-          ]
-        }
+        },
       });
     });
   });

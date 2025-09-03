@@ -243,11 +243,11 @@ describe('goalController', () => {
       await goalController.getAllGoals(req, res);
       expect(res.json).toHaveBeenCalledWith({
         data: {
+          item: [
+            { id: 'goal2', status: 'completed', title: 'Done' },
+          ],
           success: true,
-          goals: [
-            { id: 'goal2', title: 'Done', status: 'completed' }
-          ]
-        }
+        },
       });
     });
   });

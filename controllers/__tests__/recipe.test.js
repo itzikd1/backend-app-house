@@ -233,9 +233,31 @@ describe('recipeController', () => {
         { id: 'recipe2', name: 'Pie', ingredients: ['sugar'] },
       ]);
       await recipeController.getAllRecipes(req, res);
-      expect(res.json).toHaveBeenCalledWith([
-        { id: 'recipe1', name: 'Cake', ingredients: ['flour'] }
+      expect(res.json).toHaveBeenCalledWith({
+        data: {
+          item: [ { id: 'recipe1', name: 'Cake', ingredients: ['flour'] } ],
+          success: true,
+        },
+      });
+    });
+
+    it('should return all recipes in new format when no filter', async () => {
+      const req = mockReq({}, {}, { id: 'user1' }, {});
+      const res = mockRes();
+      recipeService.getAllRecipes.mockResolvedValue([
+        { id: 'recipe1', name: 'Cake', ingredients: ['flour'] },
+        { id: 'recipe2', name: 'Pie', ingredients: ['sugar'] },
       ]);
+      await recipeController.getAllRecipes(req, res);
+      expect(res.json).toHaveBeenCalledWith({
+        data: {
+          item: [
+            { id: 'recipe1', name: 'Cake', ingredients: ['flour'] },
+            { id: 'recipe2', name: 'Pie', ingredients: ['sugar'] },
+          ],
+          success: true,
+        },
+      });
     });
   });
 });
