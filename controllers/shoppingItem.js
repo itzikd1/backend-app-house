@@ -25,7 +25,7 @@ const getShoppingItemById = async (req, res) => {
         if (!req.user || !req.user.id) {
             return res.status(401).json({data: {success: false, error: 'User not authenticated'}});
         }
-        const item = await shoppingItemService.getShoppingItemById(Number(req.params.id));
+        const item = await shoppingItemService.getShoppingItemById(req.params.id); // Use string id
         if (!item || item.creatorId !== req.user.id) {
             return res.status(404).json({data: {success: false, error: 'Item not found'}});
         }
@@ -56,11 +56,11 @@ const updateShoppingItem = async (req, res) => {
         if (!req.user || !req.user.id) {
             return res.status(401).json({data: {success: false, error: 'User not authenticated'}});
         }
-        const item = await shoppingItemService.getShoppingItemById(Number(req.params.id));
+        const item = await shoppingItemService.getShoppingItemById(req.params.id); // Use string id
         if (!item || item.creatorId !== req.user.id) {
             return res.status(404).json({data: {success: false, error: 'Item not found'}});
         }
-        const updatedItem = await shoppingItemService.updateShoppingItem(Number(req.params.id), req.body);
+        const updatedItem = await shoppingItemService.updateShoppingItem(req.params.id, req.body); // Use string id
         return res.json({data: {success: true, item: updatedItem}});
     } catch (error) {
         return res.status(500).json({data: {success: false, error: 'Failed to update shopping item'}});
@@ -72,11 +72,11 @@ const deleteShoppingItem = async (req, res) => {
         if (!req.user || !req.user.id) {
             return res.status(401).json({data: {success: false, error: 'User not authenticated'}});
         }
-        const item = await shoppingItemService.getShoppingItemById(Number(req.params.id));
+        const item = await shoppingItemService.getShoppingItemById(req.params.id); // Use string id
         if (!item || item.creatorId !== req.user.id) {
             return res.status(404).json({data: {success: false, error: 'Item not found'}});
         }
-        await shoppingItemService.deleteShoppingItem(Number(req.params.id));
+        await shoppingItemService.deleteShoppingItem(req.params.id); // Use string id
         return res.json({data: {success: true, message: 'Item deleted'}});
     } catch (error) {
         return res.status(500).json({data: {success: false, error: 'Failed to delete shopping item'}});
