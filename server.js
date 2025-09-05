@@ -56,7 +56,7 @@ app.use('/api/goal', goalRoute);
 app.use('/api/shopping-category', shoppingCategoryRoute);
 app.use('/api/saved-shopping-list', savedShoppingListRoute);
 app.use('/api/task-category', taskCategoryRoute);
-app.use('/api/shopping-list', shoppingItemRoute);
+app.use('/api/shopping-item', shoppingItemRoute);
 
 // Serve static files from the 'public' directory
 app.use(express.static(path.join(__dirname, 'public')));

@@ -4,6 +4,7 @@
   "description": "Express API with Prisma and PostgreSQL on Vercel",
   "main": "server.js",
   "scripts": {
+    "vercel dev": "vercel dev",
     "dev": "node server",
     "start": "node server",
     "build": "prisma generate && prisma db push",
